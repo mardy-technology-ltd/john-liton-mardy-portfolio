@@ -68,6 +68,11 @@ export default function Navbar() {
   };
 
   const handleLinkClick = (e, href) => {
+    if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+      window.location.href = `/${href}`;
+      return;
+    }
+
     e.preventDefault();
     const id = href.replace('#', '');
 

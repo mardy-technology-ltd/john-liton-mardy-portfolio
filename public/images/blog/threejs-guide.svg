@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050814" />
+      <stop offset="50%" stop-color="#0a152e" />
+      <stop offset="100%" stop-color="#050814" />
+    </linearGradient>
+    <linearGradient id="cyanPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ffff" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+    <filter id="glow3d" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bgGrad2)" />
+
+  <!-- Wireframe Perspective Grid Floor -->
+  <g stroke="rgba(0, 255, 255, 0.15)" stroke-width="1">
+    <line x1="0" y1="350" x2="800" y2="350" />
+    <line x1="0" y1="380" x2="800" y2="380" />
+    <line x1="0" y1="415" x2="800" y2="415" />
+    <line x1="400" y1="200" x2="0" y2="450" />
+    <line x1="400" y1="200" x2="200" y2="450" />
+    <line x1="400" y1="200" x2="400" y2="450" />
+    <line x1="400" y1="200" x2="600" y2="450" />
+    <line x1="400" y1="200" x2="800" y2="450" />
+  </g>
+
+  <!-- Ambient Glow -->
+  <circle cx="400" cy="200" r="160" fill="#00ffff" opacity="0.15" filter="url(#glow3d)" />
+  <circle cx="550" cy="180" r="120" fill="#ec4899" opacity="0.12" filter="url(#glow3d)" />
+
+  <!-- 3D Geometric Isometric Wireframe Cube & Triangle -->
+  <g transform="translate(400, 190)">
+    <!-- 3D Icosahedron / Triangle Mesh -->
+    <polygon points="0,-90 -80,50 80,50" fill="rgba(0, 255, 255, 0.08)" stroke="#00ffff" stroke-width="2" filter="url(#glow3d)" />
+    <polygon points="0,-90 0,60 -80,50" fill="rgba(168, 85, 247, 0.15)" stroke="#a855f7" stroke-width="2" />
+    <polygon points="0,-90 80,50 0,60" fill="rgba(236, 72, 153, 0.15)" stroke="#ec4899" stroke-width="2" />
+    
+    <!-- Wireframe Particle Nodes -->
+    <circle cx="0" cy="-90" r="5" fill="#00ffff" />
+    <circle cx="-80" cy="50" r="5" fill="#a855f7" />
+    <circle cx="80" cy="50" r="5" fill="#ec4899" />
+    <circle cx="0" cy="60" r="5" fill="#ffffff" />
+  </g>
+
+  <!-- Title & Specs -->
+  <text x="400" y="80" fill="#ffffff" font-family="system-ui, sans-serif" font-weight="800" font-size="28" text-anchor="middle" letter-spacing="1">THREE.JS &amp; REACT THREE FIBER</text>
+  <text x="400" y="110" fill="#00ffff" font-family="monospace" font-size="14" text-anchor="middle">WEBGL • 60 FPS SHADERS • PARTICLE SYSTEMS</text>
+
+  <!-- Floating Badges -->
+  <g transform="translate(100, 200)">
+    <rect width="160" height="40" rx="8" fill="rgba(0, 255, 255, 0.08)" stroke="rgba(0, 255, 255, 0.3)" />
+    <text x="15" y="25" fill="#00ffff" font-family="monospace" font-size="13">🎮 60 FPS Render</text>
+  </g>
+  <g transform="translate(540, 200)">
+    <rect width="160" height="40" rx="8" fill="rgba(236, 72, 153, 0.08)" stroke="rgba(236, 72, 153, 0.3)" />
+    <text x="15" y="25" fill="#f472b6" font-family="monospace" font-size="13">✨ Custom Shaders</text>
+  </g>
+</svg>

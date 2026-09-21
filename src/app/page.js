@@ -8,6 +8,7 @@ import About from '@/components/sections/About';
 import Skills from '@/components/sections/Skills';
 import Projects from '@/components/sections/Projects';
 import Experience from '@/components/sections/Experience';
+import Blog from '@/components/sections/Blog';
 import Contact from '@/components/sections/Contact';
 
 // Dynamically import the 3D Scene to avoid SSR issues with Three.js
@@ -67,6 +68,7 @@ export default function Home() {
         <Skills />
         <Projects />
         <Experience />
+        <Blog />
         <Contact />
       </main>
     </>

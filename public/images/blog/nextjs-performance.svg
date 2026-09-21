@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080811" />
+      <stop offset="50%" stop-color="#0e1326" />
+      <stop offset="100%" stop-color="#05050a" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00ffff" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.8" />
+    </linearGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(0, 255, 255, 0.08)" stroke-width="1" />
+    </pattern>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bgGrad)" />
+  <rect width="800" height="450" fill="url(#grid)" />
+
+  <!-- Ambient Glow Orbs -->
+  <circle cx="200" cy="180" r="140" fill="#00ffff" opacity="0.12" filter="url(#neonGlow)" />
+  <circle cx="620" cy="280" r="160" fill="#a855f7" opacity="0.12" filter="url(#neonGlow)" />
+
+  <!-- Central Visual Container -->
+  <rect x="80" y="60" width="640" height="330" rx="16" fill="rgba(16, 20, 36, 0.7)" stroke="rgba(0, 255, 255, 0.25)" stroke-width="1.5" />
+
+  <!-- Top Accent Bar -->
+  <rect x="80" y="60" width="640" height="4" rx="2" fill="url(#glowGrad)" />
+
+  <!-- Terminal Header Dots -->
+  <circle cx="115" cy="88" r="6" fill="#ff5f56" />
+  <circle cx="135" cy="88" r="6" fill="#ffbd2e" />
+  <circle cx="155" cy="88" r="6" fill="#27c93f" />
+  <text x="180" y="93" fill="#64748b" font-family="monospace" font-size="12">next.js/architecture/server-components</text>
+
+  <!-- Next.js Big Logo Graphic -->
+  <g transform="translate(400, 220)">
+    <!-- Outer Glow Ring -->
+    <circle cx="0" cy="0" r="75" fill="none" stroke="rgba(0, 255, 255, 0.4)" stroke-width="2" stroke-dasharray="6, 6" />
+    <circle cx="0" cy="0" r="60" fill="#000" stroke="url(#glowGrad)" stroke-width="2.5" filter="url(#neonGlow)" />
+    
+    <!-- Next.js "N" Icon -->
+    <text x="0" y="24" fill="#ffffff" font-family="system-ui, sans-serif" font-weight="900" font-size="70" text-anchor="middle">N</text>
+  </g>
+
+  <!-- Code / Metric Badges -->
+  <g transform="translate(130, 160)">
+    <rect width="180" height="45" rx="8" fill="rgba(0, 255, 255, 0.08)" stroke="rgba(0, 255, 255, 0.3)" />
+    <text x="15" y="28" fill="#00ffff" font-family="monospace" font-size="13" font-weight="bold">⚡ Lighthouse: 99+</text>
+  </g>
+  <g transform="translate(130, 225)">
+    <rect width="180" height="45" rx="8" fill="rgba(168, 85, 247, 0.08)" stroke="rgba(168, 85, 247, 0.3)" />
+    <text x="15" y="28" fill="#c084fc" font-family="monospace" font-size="13" font-weight="bold">🚀 Server Actions</text>
+  </g>
+  <g transform="translate(130, 290)">
+    <rect width="180" height="45" rx="8" fill="rgba(0, 255, 255, 0.08)" stroke="rgba(0, 255, 255, 0.3)" />
+    <text x="15" y="28" fill="#00ffff" font-family="monospace" font-size="13" font-weight="bold">📦 0KB Client JS</text>
+  </g>
+
+  <!-- Right Floating Metric Badges -->
+  <g transform="translate(500, 160)">
+    <rect width="170" height="45" rx="8" fill="rgba(0, 255, 255, 0.08)" stroke="rgba(0, 255, 255, 0.3)" />
+    <text x="15" y="28" fill="#38bdf8" font-family="monospace" font-size="13" font-weight="bold">⏱️ TTFB &lt; 80ms</text>
+  </g>
+  <g transform="translate(500, 225)">
+    <rect width="170" height="45" rx="8" fill="rgba(168, 85, 247, 0.08)" stroke="rgba(168, 85, 247, 0.3)" />
+    <text x="15" y="28" fill="#c084fc" font-family="monospace" font-size="13" font-weight="bold">🔄 ISR On-Demand</text>
+  </g>
+  <g transform="translate(500, 290)">
+    <rect width="170" height="45" rx="8" fill="rgba(0, 255, 255, 0.08)" stroke="rgba(0, 255, 255, 0.3)" />
+    <text x="15" y="28" fill="#34d399" font-family="monospace" font-size="13" font-weight="bold">🛡️ Type Safe (TS)</text>
+  </g>
+
+  <!-- Bottom Label -->
+  <text x="400" y="425" fill="#94a3b8" font-family="monospace" font-size="13" text-anchor="middle" letter-spacing="1">NEXT.JS 14 • APP ROUTER • RSC ARCHITECTURE</text>
+</svg>
