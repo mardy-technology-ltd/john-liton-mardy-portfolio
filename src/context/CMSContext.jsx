@@ -43,6 +43,7 @@ export function CMSProvider({ children }) {
           projects: parsed.projects || prev.projects,
           experience: parsed.experience || prev.experience,
           blogs: parsed.blogs || prev.blogs,
+          messages: parsed.messages || prev.messages || defaultCMSData.messages,
         }));
       }
     } catch (e) {
@@ -173,6 +174,39 @@ export function CMSProvider({ children }) {
     });
   };
 
+  const addMessage = (messageObj) => {
+    const newMsg = {
+      id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+      date: new Date().toISOString(),
+      status: 'unread',
+      ...messageObj,
+    };
+    const updated = [newMsg, ...(data.messages || [])];
+    saveState({
+      ...data,
+      messages: updated,
+    });
+    return newMsg;
+  };
+
+  const deleteMessage = (id) => {
+    const updated = (data.messages || []).filter((m) => m.id !== id);
+    saveState({
+      ...data,
+      messages: updated,
+    });
+  };
+
+  const updateMessageStatus = (id, newStatus) => {
+    const updated = (data.messages || []).map((m) =>
+      m.id === id ? { ...m, status: newStatus } : m
+    );
+    saveState({
+      ...data,
+      messages: updated,
+    });
+  };
+
   const toggleSectionVisibility = (sectionKey) => {
     saveState({
       ...data,
@@ -190,9 +224,12 @@ export function CMSProvider({ children }) {
       projects: initialProjects,
       experience: initialExperience,
       blogs: initialBlogs,
+      messages: defaultCMSData.messages,
     };
     saveState(fresh);
   };
+
+  const unreadMessagesCount = (data?.messages || []).filter((m) => m.status === 'unread').length;
 
   return (
     <CMSContext.Provider
@@ -206,6 +243,8 @@ export function CMSProvider({ children }) {
         projects: data?.projects || initialProjects,
         experience: data?.experience || initialExperience,
         blogs: data?.blogs || initialBlogs,
+        messages: data?.messages || defaultCMSData.messages,
+        unreadMessagesCount,
         isLoaded,
         setTheme,
         setCustomColors,
@@ -216,6 +255,9 @@ export function CMSProvider({ children }) {
         updateProjects,
         updateExperience,
         updateBlogs,
+        addMessage,
+        deleteMessage,
+        updateMessageStatus,
         toggleSectionVisibility,
         resetToDefaults,
       }}

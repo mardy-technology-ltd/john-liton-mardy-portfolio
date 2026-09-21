@@ -7,7 +7,7 @@ import SocialIcon from '@/components/ui/SocialIcon';
 import styles from './Contact.module.css';
 
 export default function Contact() {
-  const { personalInfo } = useCMS();
+  const { personalInfo, addMessage } = useCMS();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState('idle'); // idle | sending | sent | error
 
@@ -15,9 +15,18 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!form.name || !form.email || !form.message) return;
     setStatus('sending');
-    // Simulate sending (wire up to an API later)
-    await new Promise((r) => setTimeout(r, 1500));
+    
+    await new Promise((r) => setTimeout(r, 600));
+    if (addMessage) {
+      addMessage({
+        name: form.name.trim(),
+        email: form.email.trim(),
+        message: form.message.trim(),
+      });
+    }
+
     setStatus('sent');
     setForm({ name: '', email: '', message: '' });
     setTimeout(() => setStatus('idle'), 4000);

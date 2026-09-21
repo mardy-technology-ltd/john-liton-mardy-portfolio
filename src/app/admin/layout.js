@@ -8,6 +8,7 @@ import styles from './adminLayout.module.css';
 
 const navItems = [
   { label: 'Overview', href: '/admin', icon: '📊' },
+  { label: 'Inbox & Leads', href: '/admin/messages', icon: '📬' },
   { label: 'Theme Studio', href: '/admin/theme', icon: '🎨' },
   { label: 'Hero & Profile', href: '/admin/hero', icon: '👤' },
   { label: 'About & Stats', href: '/admin/about', icon: '📄' },
@@ -20,7 +21,7 @@ const navItems = [
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
-  const { cmsData, resetToDefaults } = useCMS();
+  const { cmsData, resetToDefaults, unreadMessagesCount } = useCMS();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Close mobile drawer on navigation
@@ -84,6 +85,22 @@ export default function AdminLayout({ children }) {
               >
                 <span className={styles.navIcon}>{item.icon}</span>
                 <span className={styles.navLabel}>{item.label}</span>
+                {item.href === '/admin/messages' && unreadMessagesCount > 0 && (
+                  <span
+                    style={{
+                      background: 'rgba(0, 255, 255, 0.2)',
+                      color: 'var(--clr-cyan)',
+                      border: '1px solid rgba(0, 255, 255, 0.4)',
+                      padding: '0.1rem 0.45rem',
+                      borderRadius: '10px',
+                      fontSize: '0.72rem',
+                      fontFamily: 'var(--font-mono)',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {unreadMessagesCount}
+                  </span>
+                )}
                 {isActive && <span className={styles.activePill} />}
               </Link>
             );

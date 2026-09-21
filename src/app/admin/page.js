@@ -6,14 +6,16 @@ import { useCMS } from '@/context/CMSContext';
 import styles from './adminDashboard.module.css';
 
 export default function AdminDashboardPage() {
-  const { cmsData } = useCMS();
+  const { cmsData, unreadMessagesCount } = useCMS();
 
+  const messagesCount = cmsData?.messages?.length || 0;
   const skillsCount = cmsData?.skills?.length || 0;
   const projectsCount = cmsData?.projects?.length || 0;
   const blogsCount = cmsData?.blogs?.length || 0;
   const activeTheme = cmsData?.themeConfig?.activeTheme || 'cyberpunk-neon';
 
   const stats = [
+    { label: 'Inbox & Inquiries', value: unreadMessagesCount > 0 ? `${unreadMessagesCount} New (${messagesCount})` : messagesCount, icon: '📬', link: '/admin/messages', color: 'var(--clr-cyan)' },
     { label: 'Technical Skills', value: skillsCount, icon: '💡', link: '/admin/skills', color: '#00ffff' },
     { label: 'Featured Projects', value: projectsCount, icon: '🚀', link: '/admin/projects', color: '#a855f7' },
     { label: 'Articles & Blogs', value: blogsCount, icon: '✍️', link: '/admin/blog', color: '#ff6b9d' },
@@ -78,6 +80,13 @@ export default function AdminDashboardPage() {
         <div className={`glass-card ${styles.launchCard}`}>
           <h2 className={styles.cardHeading}>🚀 Quick Customizers</h2>
           <div className={styles.quickGrid}>
+            <Link href="/admin/messages" className={styles.quickBtn}>
+              <span className={styles.quickIcon}>📬</span>
+              <div>
+                <strong>Inbox &amp; Client Inquiries</strong>
+                <p>View leads, read messages &amp; reply via email</p>
+              </div>
+            </Link>
             <Link href="/admin/hero" className={styles.quickBtn}>
               <span className={styles.quickIcon}>👤</span>
               <div>

@@ -476,6 +476,27 @@ export const defaultSocialLinks = [
   { id: 's3', platform: 'email', label: 'Email', url: 'mailto:john.liton.mardy@example.com' },
 ];
 
+export const defaultMessages = [
+  {
+    id: 'msg_1',
+    name: 'Alex Rivera',
+    email: 'alex.rivera@techcorp.io',
+    subject: 'Full-Stack Web App Project Inquiry',
+    message: 'Hi John, we loved your portfolio! We are looking for a software engineer to help build our next-generation SaaS dashboard using Next.js. Are you available for a freelance/contract role?',
+    date: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
+    status: 'unread',
+  },
+  {
+    id: 'msg_2',
+    name: 'Sophia Chen',
+    email: 'sophia.c@designforge.com',
+    subject: '3D Interactive Web Collaboration',
+    message: 'Hey John! Amazing 3D work on your hero canvas. We have a client looking for a Three.js interactive product visualizer and would love to collaborate with you. Let me know when you are free for a call.',
+    date: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+    status: 'read',
+  },
+];
+
 export const defaultCMSData = {
   themeConfig: {
     activeTheme: 'cyberpunk-neon',
@@ -524,4 +545,5 @@ export const defaultCMSData = {
       { label: "Code Commits", value: "2.4K+" },
     ],
   },
+  messages: defaultMessages,
 };
