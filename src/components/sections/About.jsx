@@ -150,7 +150,7 @@ export default function About() {
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <a
-                href={info.linkedin || 'https://linkedin.com'}
+                href={info.socialLinks?.find(s => s.platform === 'linkedin')?.url || info.linkedin || 'https://linkedin.com'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline"

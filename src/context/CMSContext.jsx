@@ -32,7 +32,11 @@ export function CMSProvider({ children }) {
           ...prev,
           ...parsed,
           themeConfig: { ...prev.themeConfig, ...parsed.themeConfig },
-          personalInfo: { ...prev.personalInfo, ...parsed.personalInfo },
+          personalInfo: {
+            ...prev.personalInfo,
+            ...parsed.personalInfo,
+            socialLinks: parsed.personalInfo?.socialLinks?.length ? parsed.personalInfo.socialLinks : (prev.personalInfo?.socialLinks || defaultCMSData.personalInfo.socialLinks),
+          },
           about: { ...prev.about, ...parsed.about },
           sectionVisibility: { ...prev.sectionVisibility, ...parsed.sectionVisibility },
           skills: parsed.skills || prev.skills,

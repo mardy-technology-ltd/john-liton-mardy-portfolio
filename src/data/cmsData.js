@@ -452,6 +452,30 @@ export const bgAnimationOptions = [
   },
 ];
 
+export const availableSocialPlatforms = [
+  { id: 'linkedin', name: 'LinkedIn' },
+  { id: 'github', name: 'GitHub' },
+  { id: 'email', name: 'Email Address' },
+  { id: 'twitter', name: 'X / Twitter' },
+  { id: 'youtube', name: 'YouTube' },
+  { id: 'facebook', name: 'Facebook' },
+  { id: 'instagram', name: 'Instagram' },
+  { id: 'discord', name: 'Discord' },
+  { id: 'telegram', name: 'Telegram' },
+  { id: 'leetcode', name: 'LeetCode' },
+  { id: 'medium', name: 'Medium' },
+  { id: 'whatsapp', name: 'WhatsApp' },
+  { id: 'stackoverflow', name: 'Stack Overflow' },
+  { id: 'gitlab', name: 'GitLab' },
+  { id: 'globe', name: 'Personal Website / Other' },
+];
+
+export const defaultSocialLinks = [
+  { id: 's1', platform: 'linkedin', label: 'LinkedIn', url: 'https://linkedin.com/in/johnlitonmardy' },
+  { id: 's2', platform: 'github', label: 'GitHub', url: 'https://github.com/johnlitonmardy' },
+  { id: 's3', platform: 'email', label: 'Email', url: 'mailto:john.liton.mardy@example.com' },
+];
+
 export const defaultCMSData = {
   themeConfig: {
     activeTheme: 'cyberpunk-neon',
@@ -482,6 +506,7 @@ export const defaultCMSData = {
     email: "john.liton.mardy@example.com",
     github: "https://github.com/johnlitonmardy",
     linkedin: "https://linkedin.com/in/johnlitonmardy",
+    socialLinks: defaultSocialLinks,
     location: "Dhaka, Bangladesh",
     availableForWork: true,
     resumeUrl: "#",
