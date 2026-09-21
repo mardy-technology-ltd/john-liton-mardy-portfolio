@@ -2,11 +2,15 @@
   position: relative;
   width: 100%;
   max-width: 530px;
+  box-sizing: border-box;
   perspective: 1000px;
 }
 
 .terminalCard {
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   background: rgba(10, 15, 29, 0.78);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -303,24 +307,36 @@
 }
 
 /* Responsive */
+@media (max-width: 1080px) {
+  .terminalWrapper {
+    max-width: 100%;
+  }
+  .floatingBadgeTop, .floatingBadgeBtm {
+    display: none !important;
+  }
+}
+
 @media (max-width: 640px) {
   .terminalBody {
-    padding: 1rem 0.85rem;
+    padding: 0.85rem 0.75rem;
     min-height: auto;
   }
   .codeLines {
     font-size: 0.72rem;
-    line-height: 1.55;
+    line-height: 1.5;
   }
   .lineNum {
-    width: 1.8rem;
-    font-size: 0.68rem;
-  }
-  .floatingBadgeTop, .floatingBadgeBtm {
-    display: none;
+    width: 1.7rem;
+    font-size: 0.65rem;
   }
   .terminalFooter {
     grid-template-columns: 1fr;
     gap: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
+  .hudStat {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 }
