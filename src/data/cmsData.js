@@ -347,47 +347,108 @@ export const themePresets = {
 };
 
 export const bgAnimationOptions = [
+  // === 1. CODE & MATRIX ===
   {
-    id: 'particles',
-    name: '3D Constellation & Cosmic Particles',
-    icon: '✨',
-    badge: '3D WebGL',
-    description: 'Floating cosmic particles with interactive mouse drag & drift physics',
+    id: 'matrix-stream',
+    name: 'Digital Matrix Rain Stream',
+    category: 'Code & Matrix',
+    icon: '⚡',
+    badge: 'Cyberpunk',
+    description: 'Cascading digital code streams with glowing neon trail particles down the screen',
+  },
+  {
+    id: 'binary-stream',
+    name: 'Binary & Hex Data Flow',
+    category: 'Code & Matrix',
+    icon: '01',
+    badge: 'Binary',
+    description: 'High-density stream of 0s, 1s and memory registers simulating runtime execution',
+  },
+  {
+    id: 'terminal-grid',
+    name: 'IDE Cyber Grid Scanner',
+    category: 'Code & Matrix',
+    icon: '>_',
+    badge: 'CLI Style',
+    description: 'Futuristic code editor perspective grid with glowing scanner sweeps',
+  },
+
+  // === 2. 3D & AI NETWORKS ===
+  {
+    id: 'neural-network',
+    name: 'AI Neural Nodes & Synapses',
+    category: '3D & AI Networks',
+    icon: '🧠',
+    badge: 'Neural Net',
+    description: 'Interconnected 3D neural node cluster with electric synaptic pulses and active firing paths',
   },
   {
     id: 'cyber-core',
     name: '3D Quantum Core & Orbiting Rings',
+    category: '3D & AI Networks',
     icon: '🪐',
-    badge: '3D Model',
-    description: 'Interactive rotating 3D futuristic core with glowing neon satellite rings',
+    badge: 'Quantum 3D',
+    description: 'Interactive rotating 3D futuristic core with glowing neon satellite rings & particles',
+  },
+  {
+    id: 'particles',
+    name: '3D Code Constellation Universe',
+    category: '3D & AI Networks',
+    icon: '✨',
+    badge: '3D WebGL',
+    description: 'Floating cosmic particles with interactive mouse drag, inertial drift & breathing physics',
+  },
+
+  // === 3. DEVOPS & CLOUD ===
+  {
+    id: 'git-graph',
+    name: 'Git Commit Graph & CI/CD Pipeline',
+    category: 'DevOps & Cloud',
+    icon: '🌿',
+    badge: 'Git Flow',
+    description: 'Interactive branch commit nodes, merge pulses, and continuous deployment flow lines',
+  },
+  {
+    id: 'cloud-mesh',
+    name: 'Kubernetes Cluster & Microservice Mesh',
+    category: 'DevOps & Cloud',
+    icon: '☁️',
+    badge: 'Kubernetes',
+    description: 'Distributed server cluster topology with pulsing inter-service API traffic beams',
   },
   {
     id: 'deep-space',
     name: 'Hyperspace Starfield Warp',
+    category: 'DevOps & Cloud',
     icon: '🚀',
-    badge: 'High Speed',
-    description: 'High-density depth starfield streaming through 3D galactic space',
+    badge: 'Warp Speed',
+    description: 'High-density depth starfield streaming through 3D galactic space with hyper-drive depth',
   },
+
+  // === 4. HARDWARE & MINIMAL ===
   {
-    id: 'matrix-stream',
-    name: 'Digital Matrix Rain Stream',
-    icon: '⚡',
-    badge: 'Cyberpunk',
-    description: 'Cascading digital code streams with glowing neon trail particles',
+    id: 'circuit-board',
+    name: 'Silicon Circuit Logic Pulse',
+    category: 'Hardware & Minimal',
+    icon: '🔌',
+    badge: 'Hardware',
+    description: 'Glowing PCB logic pathways with traveling electric pulse packets along motherboard traces',
   },
   {
     id: 'aurora-waves',
     name: 'Fluid Aurora Ambient Mesh',
+    category: 'Hardware & Minimal',
     icon: '🌊',
     badge: 'Ambient Glow',
-    description: 'Silky smooth ambient gradient waves with pulsing neon light orbs',
+    description: 'Silky smooth ambient gradient waves with pulsing neon light orbs for aesthetic focus',
   },
   {
     id: 'minimal-clean',
-    name: 'Minimal Clean (Zero FX)',
+    name: 'Focus Mode (Zero 3D FX)',
+    category: 'Hardware & Minimal',
     icon: '🛡️',
     badge: 'Ultra Fast',
-    description: 'Clean distraction-free dark canvas for ultra-fast performance & readability',
+    description: 'Clean distraction-free dark canvas optimized for maximum reading focus & speed',
   },
 ];
 

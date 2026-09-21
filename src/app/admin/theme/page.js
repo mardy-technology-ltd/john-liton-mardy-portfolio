@@ -7,6 +7,7 @@ import { themePresets, bgAnimationOptions } from '@/data/cmsData';
 import styles from './adminTheme.module.css';
 
 const categories = ['All', 'Developer & Sci-Fi', 'Executive & Luxury', 'Creative & Gradients'];
+const animCategories = ['All', 'Code & Matrix', '3D & AI Networks', 'DevOps & Cloud', 'Hardware & Minimal'];
 
 export default function AdminThemePage() {
   const { cmsData, setTheme, setCustomColors, updateThemeConfig } = useCMS();
@@ -17,6 +18,9 @@ export default function AdminThemePage() {
 
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+
+  const [animCategory, setAnimCategory] = useState('All');
+  const [animSearchQuery, setAnimSearchQuery] = useState('');
 
   const [customForm, setCustomForm] = useState({
     primary: currentColors.primary || '#00ffff',
@@ -82,6 +86,16 @@ export default function AdminThemePage() {
       preset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       preset.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       preset.badge?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  // Filtered background animations
+  const filteredAnims = bgAnimationOptions.filter((opt) => {
+    const matchesCategory = animCategory === 'All' || opt.category === animCategory;
+    const matchesSearch =
+      opt.name.toLowerCase().includes(animSearchQuery.toLowerCase()) ||
+      opt.description.toLowerCase().includes(animSearchQuery.toLowerCase()) ||
+      opt.badge?.toLowerCase().includes(animSearchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -231,12 +245,45 @@ export default function AdminThemePage() {
         <div className={styles.presetHeaderRow}>
           <div>
             <h2 className={styles.sectionTitle}>2. Choose Background Animation Style</h2>
-            <p className={styles.sectionSub}>Select the 3D WebGL / Ambient background motion effects for your entire website</p>
+            <p className={styles.sectionSub}>Select from {bgAnimationOptions.length} developer-centric 3D WebGL, AI, Matrix, and Cloud animations</p>
+          </div>
+
+          {/* Animation Search Input */}
+          <div className={styles.searchWrapper}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={styles.searchIcon}>
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search developer animation..."
+              value={animSearchQuery}
+              onChange={(e) => setAnimSearchQuery(e.target.value)}
+              className={styles.searchInput}
+            />
           </div>
         </div>
 
+        {/* Animation Category Filter Pills */}
+        <div className={styles.categoryFilters}>
+          {animCategories.map((cat) => {
+            const count = cat === 'All' ? bgAnimationOptions.length : bgAnimationOptions.filter((a) => a.category === cat).length;
+            const isActive = animCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                className={`${styles.catBtn} ${isActive ? styles.catBtnActive : ''}`}
+                onClick={() => setAnimCategory(cat)}
+              >
+                {cat} <span className={styles.catCount}>({count})</span>
+              </button>
+            );
+          })}
+        </div>
+
         <div className={styles.bgAnimGrid}>
-          {bgAnimationOptions.map((opt) => {
+          {filteredAnims.map((opt) => {
             const isSelected = (cmsData?.themeConfig?.bgAnimation || 'particles') === opt.id;
             return (
               <motion.div
@@ -248,6 +295,7 @@ export default function AdminThemePage() {
                 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                layout
               >
                 <div className={styles.animTop}>
                   <div className={styles.animIconTitle}>
@@ -277,6 +325,12 @@ export default function AdminThemePage() {
             );
           })}
         </div>
+
+        {filteredAnims.length === 0 && (
+          <div className={styles.emptySearch}>
+            <p>No background animations matched &ldquo;{animSearchQuery}&rdquo;. Try another search term!</p>
+          </div>
+        )}
 
         {/* Animation Motion Controls */}
         <div className={`glass-card ${styles.motionControlsCard}`}>
