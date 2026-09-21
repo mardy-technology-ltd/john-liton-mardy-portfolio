@@ -19,8 +19,11 @@ export function CMSProvider({ children }) {
   });
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load saved configuration from localStorage on mount
+  // Load saved configuration from localStorage + Supabase on mount
   useEffect(() => {
+    let localData = null;
+
+    // 1. Instant load from localStorage
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -28,6 +31,7 @@ export function CMSProvider({ children }) {
         if (parsed?.about?.label && parsed.about.label.includes('<//')) {
           parsed.about.label = 'Who I Am';
         }
+        localData = parsed;
         setData((prev) => ({
           ...prev,
           ...parsed,
@@ -50,17 +54,60 @@ export function CMSProvider({ children }) {
       console.error('Failed to load CMS state from localStorage', e);
     }
     setIsLoaded(true);
+
+    // 2. Fetch latest global CMS snapshot from Supabase via API
+    fetch('/api/cms/sync')
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success && res.data) {
+          const cloud = res.data;
+          setData((prev) => {
+            const merged = {
+              ...prev,
+              ...cloud,
+              themeConfig: { ...prev.themeConfig, ...(cloud.themeConfig || {}) },
+              personalInfo: { ...prev.personalInfo, ...(cloud.personalInfo || {}) },
+              about: { ...prev.about, ...(cloud.about || {}) },
+              sectionVisibility: { ...prev.sectionVisibility, ...(cloud.sectionVisibility || {}) },
+              skills: cloud.skills || prev.skills,
+              projects: cloud.projects || prev.projects,
+              experience: cloud.experience || prev.experience,
+              blogs: cloud.blogs || prev.blogs,
+              messages: cloud.messages || prev.messages,
+            };
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+            } catch (err) {}
+            return merged;
+          });
+        }
+      })
+      .catch((err) => {
+        // Silent fallback to local storage
+      });
   }, []);
 
-  // Save changes to localStorage with functional state updates
+  // Save changes to localStorage + Cloud Supabase
   const saveState = (updater) => {
     setData((prev) => {
       const newState = typeof updater === 'function' ? updater(prev) : updater;
+      
+      // 1. Save to localStorage
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
       } catch (e) {
         console.error('Failed to save CMS state to localStorage', e);
       }
+
+      // 2. Background sync to Supabase
+      fetch('/api/cms/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newState),
+      }).catch((err) => {
+        // Silent background fallback
+      });
+
       return newState;
     });
   };

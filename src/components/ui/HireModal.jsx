@@ -68,22 +68,55 @@ export default function HireModal({ isOpen, onClose }) {
     if (!form.name || !form.email) return;
 
     setStatus('submitting');
-    await new Promise((r) => setTimeout(r, 700));
-
-    if (addMessage) {
-      addMessage({
-        name: form.name.trim(),
-        email: form.email.trim(),
-        source: 'hire',
-        projectType: form.projectType,
-        budget: form.budget,
-        timeline: form.timeline,
-        subject: `[Hire Proposal: ${form.projectType}] ${form.budget}`,
-        message: form.message.trim() || 'No additional note provided.',
+    
+    try {
+      // 1. Submit to API backend (Supabase DB + Resend Email)
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          projectType: form.projectType,
+          budget: form.budget,
+          timeline: form.timeline,
+          subject: `[Hire Inquiry: ${form.projectType}] Budget: ${form.budget}`,
+          message: form.message.trim() || 'Project hire inquiry submitted via Hire Modal.',
+          source: 'hire_modal',
+        }),
       });
-    }
 
-    setStatus('success');
+      // 2. Also register in local CMS state
+      if (addMessage) {
+        addMessage({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          source: 'hire',
+          projectType: form.projectType,
+          budget: form.budget,
+          timeline: form.timeline,
+          subject: `[Hire Proposal: ${form.projectType}] ${form.budget}`,
+          message: form.message.trim() || 'No additional note provided.',
+        });
+      }
+
+      setStatus('success');
+    } catch (err) {
+      console.error('Hire modal submit error:', err);
+      if (addMessage) {
+        addMessage({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          source: 'hire',
+          projectType: form.projectType,
+          budget: form.budget,
+          timeline: form.timeline,
+          subject: `[Hire Proposal: ${form.projectType}] ${form.budget}`,
+          message: form.message.trim() || 'No additional note provided.',
+        });
+      }
+      setStatus('success');
+    }
   };
 
   const handleResetAndClose = () => {

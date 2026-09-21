@@ -19,20 +19,50 @@ export default function Contact() {
     if (!form.name || !form.email || !form.message) return;
     setStatus('sending');
     
-    await new Promise((r) => setTimeout(r, 600));
-    if (addMessage) {
-      addMessage({
-        name: form.name.trim(),
-        email: form.email.trim(),
-        message: form.message.trim(),
-        source: 'contact',
-        subject: 'General Contact Message',
+    try {
+      // 1. Submit to API backend (Supabase DB + Resend Email)
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          message: form.message.trim(),
+          source: 'contact_form',
+          subject: 'General Portfolio Contact Message',
+        }),
       });
-    }
 
-    setStatus('sent');
-    setForm({ name: '', email: '', message: '' });
-    setTimeout(() => setStatus('idle'), 4000);
+      // 2. Also register in local CMS state
+      if (addMessage) {
+        addMessage({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          message: form.message.trim(),
+          source: 'contact',
+          subject: 'General Contact Message',
+        });
+      }
+
+      setStatus('sent');
+      setForm({ name: '', email: '', message: '' });
+      setTimeout(() => setStatus('idle'), 4000);
+    } catch (err) {
+      console.error('Contact submit error:', err);
+      // Fallback: still register locally
+      if (addMessage) {
+        addMessage({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          message: form.message.trim(),
+          source: 'contact',
+          subject: 'General Contact Message',
+        });
+      }
+      setStatus('sent');
+      setForm({ name: '', email: '', message: '' });
+      setTimeout(() => setStatus('idle'), 4000);
+    }
   };
 
   return (
