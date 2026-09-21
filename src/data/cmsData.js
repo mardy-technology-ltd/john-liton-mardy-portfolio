@@ -483,7 +483,7 @@ export const defaultMessages = [
     email: 'alex.rivera@techcorp.io',
     subject: 'Full-Stack Web App Project Inquiry',
     message: 'Hi John, we loved your portfolio! We are looking for a software engineer to help build our next-generation SaaS dashboard using Next.js. Are you available for a freelance/contract role?',
-    date: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
+    date: '2026-09-21T18:30:00.000Z',
     status: 'unread',
   },
   {
@@ -492,7 +492,7 @@ export const defaultMessages = [
     email: 'sophia.c@designforge.com',
     subject: '3D Interactive Web Collaboration',
     message: 'Hey John! Amazing 3D work on your hero canvas. We have a client looking for a Three.js interactive product visualizer and would love to collaborate with you. Let me know when you are free for a call.',
-    date: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+    date: '2026-09-20T14:15:00.000Z',
     status: 'read',
   },
 ];

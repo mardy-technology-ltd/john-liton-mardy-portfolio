@@ -236,7 +236,9 @@ export default function AdminMessagesPage() {
                   </div>
 
                   <div className={styles.cardMeta}>
-                    <span className={styles.dateBadge}>{formatDate(msg.date)}</span>
+                    <span className={styles.dateBadge} suppressHydrationWarning>
+                      {formatDate(msg.date)}
+                    </span>
                     <span
                       className={`${styles.statusBadge} ${
                         isUnread
