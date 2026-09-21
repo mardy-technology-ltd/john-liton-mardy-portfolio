@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { projects } from '@/data/portfolio';
+import { useCMS } from '@/context/CMSContext';
 import styles from './Projects.module.css';
 
 function ProjectCard({ project, index }) {
@@ -88,8 +88,10 @@ function ProjectCard({ project, index }) {
 }
 
 export default function Projects() {
+  const { cmsData } = useCMS();
   const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? projects : projects.slice(0, 3);
+  const allProjects = cmsData?.projects || [];
+  const visible = showAll ? allProjects : allProjects.slice(0, 3);
 
   return (
     <section id="projects" className={`section ${styles.projects}`}>
@@ -103,7 +105,7 @@ export default function Projects() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <p className="section-label">Portfolio</p>
+          <span className="section-tag">&lt;// SECTION: PORTFOLIO &amp; WORKS /&gt;</span>
           <h2 className="section-title">Featured Projects</h2>
           <p className="section-subtitle">
             A selection of projects that showcase my skills and passion for building great software.
@@ -112,11 +114,11 @@ export default function Projects() {
 
         <div className={styles.grid}>
           {visible.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+            <ProjectCard key={project.id || i} project={project} index={i} />
           ))}
         </div>
 
-        {!showAll && projects.length > 3 && (
+        {!showAll && allProjects.length > 3 && (
           <motion.div
             className={styles.showMoreWrapper}
             initial={{ opacity: 0 }}
@@ -124,7 +126,7 @@ export default function Projects() {
             viewport={{ once: true }}
           >
             <button className="btn btn-outline" onClick={() => setShowAll(true)}>
-              Show All Projects ({projects.length})
+              Show All Projects ({allProjects.length})
             </button>
           </motion.div>
         )}

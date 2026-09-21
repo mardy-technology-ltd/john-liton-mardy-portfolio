@@ -1,0 +1,237 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.welcomeBanner {
+  padding: 2.5rem;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  border-color: rgba(0, 255, 255, 0.25);
+  background: linear-gradient(135deg, rgba(16, 24, 48, 0.7) 0%, rgba(10, 15, 30, 0.9) 100%);
+}
+
+.bannerContent {
+  max-width: 600px;
+}
+
+.welcomeTitle {
+  font-family: var(--font-heading);
+  font-size: 1.85rem;
+  font-weight: 800;
+  margin: 0.5rem 0 0.75rem 0;
+  color: var(--clr-text-primary);
+}
+
+.welcomeSubtitle {
+  color: var(--clr-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.bannerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.statCard {
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.statIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.statLink {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.statLink:hover {
+  color: var(--clr-cyan);
+}
+
+.statValue {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+  text-transform: capitalize;
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+}
+
+/* Sections Row */
+.sectionsRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.launchCard,
+.visibilityCard {
+  padding: 2rem;
+  border-radius: var(--radius-xl);
+}
+
+.cardHeading {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--clr-text-primary);
+}
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.quickBtn {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.1rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  text-decoration: none;
+  color: var(--clr-text-primary);
+  transition: all 0.25s ease;
+}
+
+.quickBtn:hover {
+  background: rgba(0, 255, 255, 0.05);
+  border-color: rgba(0, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.quickIcon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.quickBtn strong {
+  display: block;
+  font-size: 0.92rem;
+  margin-bottom: 0.25rem;
+}
+
+.quickBtn p {
+  color: var(--clr-text-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Visibility list */
+.visHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.editVisLink {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--clr-cyan);
+  text-decoration: none;
+}
+
+.visList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.visItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.visName {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--clr-text-secondary);
+}
+
+.visBadge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.visActive {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.visInactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .sectionsRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .quickGrid {
+    grid-template-columns: 1fr;
+  }
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}

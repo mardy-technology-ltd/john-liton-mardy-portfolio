@@ -1,23 +1,35 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { navLinks, personalInfo } from '@/data/portfolio';
+import { navLinks as defaultNavLinks } from '@/data/portfolio';
+import { useCMS } from '@/context/CMSContext';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
+  const { personalInfo, sectionVisibility } = useCMS();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   // true = hero name has scrolled out of view → show full name in navbar
   const [namePassed, setNamePassed] = useState(false);
 
+  // Filter dynamic navigation links based on section visibility
+  const activeNavLinks = defaultNavLinks.filter((link) => {
+    const key = link.href.replace('#', '');
+    if (key === 'hero') return true;
+    if (sectionVisibility && key in sectionVisibility) {
+      return Boolean(sectionVisibility[key]);
+    }
+    return true;
+  });
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
 
       // Detect active section
-      const sections = navLinks.map((l) => l.href.replace('#', ''));
+      const sections = activeNavLinks.map((l) => l.href.replace('#', ''));
       for (const id of [...sections].reverse()) {
         const el = document.getElementById(id);
         if (el && window.scrollY >= el.offsetTop - 120) {
@@ -40,7 +52,7 @@ export default function Navbar() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [activeNavLinks]);
 
   const scrollToSection = (id) => {
     if (id === 'hero' || id === '') {
@@ -93,7 +105,7 @@ export default function Navbar() {
     >
       <div className={styles.navInner}>
 
-        {/* Logo — shows JOHN LITON MARDY only after name scrolls off screen */}
+        {/* Logo — shows Dynamic Name only after name scrolls off screen */}
         <a
           href="#hero"
           className={styles.logo}
@@ -109,7 +121,7 @@ export default function Navbar() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
               >
-                JOHN LITON MARDY
+                {personalInfo?.name?.toUpperCase() || 'PORTFOLIO'}
               </motion.span>
             )}
           </AnimatePresence>
@@ -117,7 +129,7 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <ul className={styles.links}>
-          {navLinks.map((link) => {
+          {activeNavLinks.map((link) => {
             const isActive = activeSection === link.href.replace('#', '');
             return (
               <li key={link.href}>
@@ -142,7 +154,7 @@ export default function Navbar() {
 
         {/* CTA */}
         <a
-          href={`mailto:${personalInfo.email}`}
+          href={`mailto:${personalInfo?.email || 'contact@example.com'}`}
           className={`btn btn-outline ${styles.ctaBtn}`}
         >
           Hire Me
@@ -178,7 +190,7 @@ export default function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {navLinks.map((link, i) => (
+            {activeNavLinks.map((link, i) => (
               <motion.button
                 key={link.href}
                 className={styles.mobileLink}

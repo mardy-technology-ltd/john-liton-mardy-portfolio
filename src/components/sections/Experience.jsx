@@ -1,10 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { experience } from '@/data/portfolio';
+import { useCMS } from '@/context/CMSContext';
 import styles from './Experience.module.css';
 
 export default function Experience() {
+  const { cmsData } = useCMS();
+  const experienceList = cmsData?.experience || [];
+
   return (
     <section id="experience" className={`section ${styles.exp}`}>
       <div className="container">
@@ -15,7 +18,7 @@ export default function Experience() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <p className="section-label">Career</p>
+          <span className="section-tag">&lt;// SECTION: CAREER &amp; EXPERIENCE /&gt;</span>
           <h2 className="section-title">Work Experience</h2>
           <p className="section-subtitle">
             My professional journey — building impactful software at every step.
@@ -23,7 +26,7 @@ export default function Experience() {
         </motion.div>
 
         <div className={styles.timeline}>
-          {experience.map((item, i) => (
+          {experienceList.map((item, i) => (
             <motion.div
               key={item.id}
               className={styles.timelineItem}
@@ -41,7 +44,7 @@ export default function Experience() {
                 <div className={styles.dot}>
                   <div className={styles.dotInner} />
                 </div>
-                {i < experience.length - 1 && <div className={styles.line} />}
+                {i < experienceList.length - 1 && <div className={styles.line} />}
               </div>
 
               {/* Card */}

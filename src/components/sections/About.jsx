@@ -2,15 +2,8 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { personalInfo } from '@/data/portfolio';
+import { useCMS } from '@/context/CMSContext';
 import styles from './About.module.css';
-
-const stats = [
-  { value: '6+', label: 'Years Experience' },
-  { value: '50+', label: 'Projects Delivered' },
-  { value: '20+', label: 'Happy Clients' },
-  { value: '∞', label: 'Cups of Coffee' },
-];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -22,6 +15,17 @@ const fadeUp = {
 };
 
 export default function About() {
+  const { cmsData } = useCMS();
+  const info = cmsData?.personalInfo || {};
+  const aboutData = cmsData?.about || {};
+
+  const dynamicStats = [
+    { value: aboutData.yearsExperience || '4+', label: 'Years Experience' },
+    { value: aboutData.projectsCompleted || '25+', label: 'Projects Delivered' },
+    { value: aboutData.happyClients || '18+', label: 'Happy Clients' },
+    { value: '∞', label: 'Cups of Coffee' },
+  ];
+
   return (
     <section id="about" className={`section ${styles.about}`}>
       {/* Background orbs */}
@@ -37,8 +41,8 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <p className="section-label">About Me</p>
-          <h2 className="section-title">Crafting Digital Realities</h2>
+          <span className="section-tag">{aboutData.label || '<// SECTION: IDENTITY & BACKGROUND />'}</span>
+          <h2 className="section-title">{aboutData.title || 'About Me'}</h2>
           <p className="section-subtitle">
             A glimpse into who I am, what drives me, and the journey that shaped my craft.
           </p>
@@ -57,7 +61,7 @@ export default function About() {
               <div className={styles.avatarInner}>
                 <Image 
                   src="/profile.jpg" 
-                  alt={personalInfo.name} 
+                  alt={info.name || 'John Liton Mardy'} 
                   fill
                   style={{ objectFit: 'cover' }}
                   sizes="(max-width: 480px) 220px, 280px"
@@ -79,7 +83,7 @@ export default function About() {
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
-              {personalInfo.location}
+              {info.location || 'Dhaka, Bangladesh'}
             </div>
           </motion.div>
 
@@ -92,7 +96,7 @@ export default function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              Hi, I&apos;m John — I build things for the web.
+              Hi, I&apos;m {info.name ? info.name.split(' ')[0] : 'John'} — I build things for the web &amp; mobile.
             </motion.h3>
 
             <motion.p
@@ -102,7 +106,7 @@ export default function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              {personalInfo.bio}
+              {info.bio}
             </motion.p>
 
             <motion.p
@@ -112,8 +116,8 @@ export default function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              I specialize in building <span className={styles.highlight}>full-stack web applications</span> and
-              have a deep passion for <span className={styles.highlight}>3D web experiences</span>. 
+              I specialize in building <span className={styles.highlight}>full-stack web &amp; mobile applications</span> and
+              have a deep passion for <span className={styles.highlight}>3D interactive digital experiences</span>. 
               I believe great software is both technically sound and a joy to use.
             </motion.p>
 
@@ -126,7 +130,7 @@ export default function About() {
               transition={{ duration: 0.6, delay: 0.3 }}
             >
               {[
-                'Build scalable full-stack web applications',
+                'Build scalable full-stack web & mobile apps',
                 'Create immersive 3D web experiences',
                 'Architect clean, maintainable codebases',
                 'Optimize for performance & accessibility',
@@ -146,7 +150,7 @@ export default function About() {
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <a
-                href={personalInfo.linkedin}
+                href={info.linkedin || 'https://linkedin.com'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline"
@@ -159,7 +163,7 @@ export default function About() {
 
         {/* Stats */}
         <div className={styles.statsGrid}>
-          {stats.map((stat, i) => (
+          {dynamicStats.map((stat, i) => (
             <motion.div
               key={stat.label}
               className={`glass-card ${styles.statCard}`}

@@ -2,15 +2,17 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { skills } from '@/data/portfolio';
+import { useCMS } from '@/context/CMSContext';
 import styles from './Skills.module.css';
 
 const categories = ['Web & Frontend', 'Mobile & App', 'Backend & APIs', 'Cloud & DevOps'];
 
 export default function Skills() {
+  const { cmsData } = useCMS();
   const [activeCategory, setActiveCategory] = useState('Web & Frontend');
 
-  const filtered = skills.filter((s) => s.category === activeCategory);
+  const allSkills = cmsData?.skills || [];
+  const filtered = allSkills.filter((s) => s.category === activeCategory);
 
   return (
     <section id="skills" className={`section ${styles.skills}`}>

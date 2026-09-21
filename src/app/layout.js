@@ -1,4 +1,5 @@
 import './globals.css';
+import { CMSProvider } from '@/context/CMSContext';
 
 export const metadata = {
   title: 'John Liton Mardy | Software Engineer',
@@ -22,7 +23,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {children}
+        <CMSProvider>
+          {children}
+        </CMSProvider>
       </body>
     </html>
   );

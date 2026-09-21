@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import TypeWriter from '@/components/ui/TypeWriter';
-import { personalInfo } from '@/data/portfolio';
+import { useCMS } from '@/context/CMSContext';
 import styles from './Hero.module.css';
 
 const typewriterTexts = [
@@ -24,6 +24,14 @@ const itemVariants = {
 };
 
 export default function Hero() {
+  const { cmsData } = useCMS();
+  const info = cmsData?.personalInfo || {};
+
+  // Split name into first and last
+  const nameParts = (info.name || 'John Liton Mardy').split(' ');
+  const lastName = nameParts.length > 1 ? nameParts.pop() : '';
+  const firstName = nameParts.join(' ');
+
   return (
     <section id="hero" className={styles.hero}>
       <div className={styles.content}>
@@ -34,10 +42,12 @@ export default function Hero() {
           animate="visible"
         >
           {/* Status Badge */}
-          <motion.div className={styles.statusBadge} variants={itemVariants}>
-            <span className={styles.statusDot} />
-            Available for work
-          </motion.div>
+          {info.availableForWork && (
+            <motion.div className={styles.statusBadge} variants={itemVariants}>
+              <span className={styles.statusDot} />
+              Available for work
+            </motion.div>
+          )}
 
           {/* Greeting */}
           <motion.p className={styles.greeting} variants={itemVariants}>
@@ -46,20 +56,24 @@ export default function Hero() {
 
           {/* Name */}
           <motion.h1 id="hero-name" className={styles.name} variants={itemVariants}>
-            <span className={styles.nameFirst}>John Liton</span>
-            <br />
-            <span className={styles.nameLast}>Mardy</span>
+            <span className={styles.nameFirst}>{firstName}</span>
+            {lastName && (
+              <>
+                <br />
+                <span className={styles.nameLast}>{lastName}</span>
+              </>
+            )}
           </motion.h1>
 
           {/* Typewriter Title */}
           <motion.div className={styles.titleRow} variants={itemVariants}>
             <span className={styles.titlePrefix}>&gt;&nbsp;</span>
-            <TypeWriter texts={typewriterTexts} speed={75} deleteSpeed={40} delay={2200} />
+            <TypeWriter texts={info.title ? [info.title, ...typewriterTexts.slice(1)] : typewriterTexts} speed={75} deleteSpeed={40} delay={2200} />
           </motion.div>
 
           {/* Bio */}
           <motion.p className={styles.bio} variants={itemVariants}>
-            {personalInfo.bio}
+            {info.bio}
           </motion.p>
 
           {/* CTA Buttons */}
@@ -78,7 +92,7 @@ export default function Hero() {
               </svg>
             </a>
             <a
-              href={personalInfo.github}
+              href={info.github || 'https://github.com'}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-outline"
@@ -92,12 +106,12 @@ export default function Hero() {
 
           {/* Social links */}
           <motion.div className={styles.socials} variants={itemVariants}>
-            <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+            <a href={info.linkedin || 'https://linkedin.com'} target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
               </svg>
             </a>
-            <a href={`mailto:${personalInfo.email}`} className={styles.socialLink}>
+            <a href={`mailto:${info.email || 'info@example.com'}`} className={styles.socialLink}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                 <polyline points="22,6 12,13 2,6" />

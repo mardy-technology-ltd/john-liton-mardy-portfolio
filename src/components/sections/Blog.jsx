@@ -3,11 +3,14 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getFeaturedBlogs } from '@/data/blogs';
+import { useCMS } from '@/context/CMSContext';
 import styles from './Blog.module.css';
 
 export default function Blog() {
-  const featuredPosts = getFeaturedBlogs();
+  const { cmsData } = useCMS();
+  const allBlogs = cmsData?.blogs || [];
+  const featuredPosts = allBlogs.filter((b) => b.featured).slice(0, 3);
+  const displayPosts = featuredPosts.length > 0 ? featuredPosts : allBlogs.slice(0, 3);
 
   return (
     <section id="blog" className={`section ${styles.blogSection}`}>
@@ -29,7 +32,7 @@ export default function Blog() {
 
         {/* Featured Posts Grid */}
         <div className={styles.grid}>
-          {featuredPosts.map((post, index) => (
+          {displayPosts.map((post, index) => (
             <motion.article
               key={post.slug}
               className={`glass-card ${styles.card}`}

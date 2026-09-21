@@ -11,6 +11,8 @@ import Experience from '@/components/sections/Experience';
 import Blog from '@/components/sections/Blog';
 import Contact from '@/components/sections/Contact';
 
+import { useCMS } from '@/context/CMSContext';
+
 // Dynamically import the 3D Scene to avoid SSR issues with Three.js
 const Scene = dynamic(() => import('@/components/3d/Scene'), {
   ssr: false,
@@ -18,7 +20,24 @@ const Scene = dynamic(() => import('@/components/3d/Scene'), {
 });
 
 export default function Home() {
+  const { cmsData } = useCMS();
   const cursorRef = useRef(null);
+
+  const visibility = cmsData?.sectionVisibility || {
+    hero: true,
+    about: true,
+    skills: true,
+    projects: true,
+    experience: true,
+    blog: true,
+    contact: true,
+  };
+
+  const themeConfig = cmsData?.themeConfig || {
+    scanlines: true,
+    showGrid: true,
+    cursorGlow: true,
+  };
 
   useEffect(() => {
     // Suppress harmless THREE.Clock deprecation warning from @react-three/fiber internals
@@ -32,6 +51,7 @@ export default function Home() {
 
   // Custom cursor glow that follows mouse
   useEffect(() => {
+    if (!themeConfig.cursorGlow) return;
     const cursor = cursorRef.current;
     if (!cursor) return;
 
@@ -42,18 +62,18 @@ export default function Home() {
 
     window.addEventListener('mousemove', move, { passive: true });
     return () => window.removeEventListener('mousemove', move);
-  }, []);
+  }, [themeConfig.cursorGlow]);
 
   return (
     <>
       {/* Scanline effect */}
-      <div className="scanline" />
+      {themeConfig.scanlines && <div className="scanline" />}
 
       {/* Background grid */}
-      <div className="bg-grid" />
+      {themeConfig.showGrid && <div className="bg-grid" />}
 
       {/* Cursor glow */}
-      <div ref={cursorRef} className="cursor-glow" />
+      {themeConfig.cursorGlow && <div ref={cursorRef} className="cursor-glow" />}
 
       {/* Fixed 3D Canvas — renders behind all content */}
       <Scene showHeroModel={false} />
@@ -63,13 +83,13 @@ export default function Home() {
 
       {/* Page Content */}
       <main className="page-content">
-        <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Experience />
-        <Blog />
-        <Contact />
+        {visibility.hero && <Hero />}
+        {visibility.about && <About />}
+        {visibility.skills && <Skills />}
+        {visibility.projects && <Projects />}
+        {visibility.experience && <Experience />}
+        {visibility.blog && <Blog />}
+        {visibility.contact && <Contact />}
       </main>
     </>
   );
