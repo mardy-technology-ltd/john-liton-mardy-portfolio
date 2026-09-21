@@ -91,7 +91,7 @@ export default function AdminProjectsPage() {
 
       <div className={styles.pageHeader}>
         <div>
-          <span className="section-tag">&lt;// PROJECTS &amp; SHOWCASE MANAGER /&gt;</span>
+          <span className="section-tag">PROJECTS &amp; SHOWCASE</span>
           <h1 className={styles.title}>Projects Showcase Manager</h1>
           <p className={styles.subtitle}>
             Manage portfolio projects, tech stacks, live links, repository URLs, and featured badges.

@@ -67,7 +67,7 @@ export default function AdminSkillsPage() {
 
       <div className={styles.pageHeader}>
         <div>
-          <span className="section-tag">&lt;// SKILLS &amp; ARSENAL MANAGER /&gt;</span>
+          <span className="section-tag">SKILLS &amp; TECH STACK</span>
           <h1 className={styles.title}>Technical Skills Manager</h1>
           <p className={styles.subtitle}>
             Add, update, or remove technical skills, set category groups, badge colors, and proficiency levels.

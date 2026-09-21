@@ -109,7 +109,7 @@ export default function AdminHeroPage() {
       {/* Header */}
       <div className={styles.pageHeader}>
         <div>
-          <span className="section-tag">&lt;// HERO &amp; PROFILE CUSTOMIZER /&gt;</span>
+          <span className="section-tag">HERO &amp; PROFILE</span>
           <h1 className={styles.title}>Hero &amp; Social Links</h1>
           <p className={styles.subtitle}>
             Manage your headline, introduction, and connect all your custom social media channels &amp; developer handles dynamically.

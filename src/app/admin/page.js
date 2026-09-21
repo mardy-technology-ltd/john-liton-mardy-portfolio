@@ -30,7 +30,7 @@ export default function AdminDashboardPage() {
         transition={{ duration: 0.5 }}
       >
         <div className={styles.bannerContent}>
-          <span className="section-tag">&lt;// SYSTEM: CONTROL PANEL /&gt;</span>
+          <span className="section-tag">CMS DASHBOARD</span>
           <h1 className={styles.welcomeTitle}>Portfolio Management Studio</h1>
           <p className={styles.welcomeSubtitle}>
             Welcome back, <strong>{cmsData?.personalInfo?.name || 'John Liton Mardy'}</strong>. Customize every section, create articles, and transform the entire website theme in real-time.

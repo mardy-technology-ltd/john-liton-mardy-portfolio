@@ -35,7 +35,7 @@ export default function AdminAboutPage() {
 
       <div className={styles.pageHeader}>
         <div>
-          <span className="section-tag">&lt;// ABOUT SECTION CUSTOMIZER /&gt;</span>
+          <span className="section-tag">ABOUT SECTION</span>
           <h1 className={styles.title}>About Me &amp; Statistics</h1>
           <p className={styles.subtitle}>
             Manage your background story, philosophy, and key experience counters.

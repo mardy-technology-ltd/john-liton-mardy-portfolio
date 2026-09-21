@@ -116,7 +116,7 @@ export default function AdminThemePage() {
       {/* Header */}
       <div className={styles.pageHeader}>
         <div>
-          <span className="section-tag">&lt;// STUDIO: THEME &amp; PALETTE CUSTOMIZER /&gt;</span>
+          <span className="section-tag">THEME &amp; VISUAL ENGINE</span>
           <h1 className={styles.title}>Live Theme Studio</h1>
           <p className={styles.subtitle}>
             Select from 16 highly curated professional theme presets across Developer, Executive &amp; Creative palettes, or craft your custom color spectrum.

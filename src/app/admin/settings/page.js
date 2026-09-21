@@ -22,7 +22,7 @@ export default function AdminSettingsPage() {
     <div className={styles.container}>
       <div className={styles.pageHeader}>
         <div>
-          <span className="section-tag">&lt;// SITE CONFIG &amp; VISIBILITY /&gt;</span>
+          <span className="section-tag">SYSTEM SETTINGS</span>
           <h1 className={styles.title}>Section Visibility Controls</h1>
           <p className={styles.subtitle}>
             Turn individual portfolio sections ON or OFF dynamically. Disabled sections will gracefully hide from the homepage and navigation.

@@ -85,7 +85,7 @@ export default function AdminExperiencePage() {
 
       <div className={styles.pageHeader}>
         <div>
-          <span className="section-tag">&lt;// CAREER &amp; EXPERIENCE TIMELINE /&gt;</span>
+          <span className="section-tag">CAREER &amp; EXPERIENCE</span>
           <h1 className={styles.title}>Experience Timeline Manager</h1>
           <p className={styles.subtitle}>
             Manage your employment history, engineering roles, responsibilities, and technologies used.

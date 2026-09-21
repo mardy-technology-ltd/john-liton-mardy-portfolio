@@ -149,7 +149,7 @@ Incremental Static Regeneration provides instant CDN response times.`,
 
       <div className={styles.pageHeader}>
         <div>
-          <span className="section-tag">&lt;// BLOG &amp; ARTICLES MANAGER /&gt;</span>
+          <span className="section-tag">BLOG &amp; ARTICLES</span>
           <h1 className={styles.title}>Articles &amp; Knowledge Base</h1>
           <p className={styles.subtitle}>
             Write and publish technical articles, update meta info, manage tags, and set featured articles.
