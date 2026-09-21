@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCMS } from '@/context/CMSContext';
@@ -20,6 +21,12 @@ const navItems = [
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const { cmsData, resetToDefaults } = useCMS();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile drawer on navigation
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const handleReset = () => {
     if (window.confirm('Are you sure you want to reset all site customizations to defaults?')) {
@@ -34,15 +41,35 @@ export default function AdminLayout({ children }) {
       <div className="scanline" />
       <div className="bg-grid" />
 
-      {/* Sidebar */}
-      <aside className={styles.sidebar}>
+      {/* Mobile Drawer Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className={styles.backdrop}
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Sidebar / Mobile Drawer */}
+      <aside className={`${styles.sidebar} ${mobileMenuOpen ? styles.sidebarOpen : ''}`}>
         <div className={styles.sidebarHeader}>
           <div className={styles.logoBadge}>
             <span className={styles.bracket}>&lt;</span>
             <span className={styles.logoText}>JLM STUDIO</span>
             <span className={styles.bracket}>/&gt;</span>
           </div>
-          <p className={styles.sidebarSub}>Dynamic Portfolio CMS</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.3rem' }}>
+            <p className={styles.sidebarSub}>Dynamic Portfolio CMS</p>
+            {/* Close button on mobile drawer */}
+            <button
+              type="button"
+              className={styles.closeDrawerBtn}
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close Navigation"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         <nav className={styles.nav}>
@@ -52,6 +79,7 @@ export default function AdminLayout({ children }) {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
                 className={`${styles.navLink} ${isActive ? styles.activeNavLink : ''}`}
               >
                 <span className={styles.navIcon}>{item.icon}</span>
@@ -77,17 +105,36 @@ export default function AdminLayout({ children }) {
       <div className={styles.contentArea}>
         {/* Top Header */}
         <header className={styles.topHeader}>
-          <div className={styles.breadcrumbs}>
-            <span>CMS Admin</span>
-            <span className={styles.crumbDivider}>/</span>
-            <span className={styles.crumbCurrent}>
-              {navItems.find((n) => n.href === pathname)?.label || 'Dashboard'}
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            {/* Hamburger for mobile */}
+            <button
+              type="button"
+              className={styles.mobileToggleBtn}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle navigation menu"
+            >
+              <span className={styles.hamburgerBar} />
+              <span className={styles.hamburgerBar} />
+              <span className={styles.hamburgerBar} />
+            </button>
+
+            <div className={styles.breadcrumbs}>
+              <span className={styles.crumbRoot}>CMS Admin</span>
+              <span className={styles.crumbDivider}>/</span>
+              <span className={styles.crumbCurrent}>
+                {navItems.find((n) => n.href === pathname)?.label || 'Dashboard'}
+              </span>
+            </div>
           </div>
 
           <div className={styles.headerActions}>
-            <Link href="/" target="_blank" className="btn btn-outline" style={{ padding: '0.45rem 1rem', fontSize: '0.82rem' }}>
-              <span>View Live Portfolio ↗</span>
+            <Link
+              href="/"
+              target="_blank"
+              className="btn btn-outline"
+              style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', whiteSpace: 'nowrap' }}
+            >
+              <span>View Site ↗</span>
             </Link>
           </div>
         </header>

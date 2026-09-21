@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  width: 100%;
 }
 
 .toast {
@@ -17,6 +18,7 @@
   font-weight: 600;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.4);
   z-index: 1000;
+  max-width: calc(100vw - 4rem);
 }
 
 .pageHeader {
@@ -29,7 +31,7 @@
 
 .title {
   font-family: var(--font-heading);
-  font-size: 1.85rem;
+  font-size: clamp(1.4rem, 4vw, 1.85rem);
   font-weight: 800;
   margin: 0.35rem 0 0.5rem 0;
   color: var(--clr-text-primary);
@@ -91,6 +93,7 @@
   font-size: 0.92rem;
   outline: none;
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  min-height: 44px;
 }
 
 .textarea {
@@ -116,12 +119,14 @@
   align-items: center;
   gap: 0.75rem;
   cursor: pointer;
+  min-height: 44px;
 }
 
 .checkbox {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   accent-color: var(--clr-cyan);
+  cursor: pointer;
 }
 
 .itemsList {
@@ -172,17 +177,22 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  flex-shrink: 0;
 }
 
 .deleteBtn {
   background: transparent;
   border: 1px solid rgba(239, 68, 68, 0.3);
   color: #f87171;
-  padding: 0.35rem 0.75rem;
+  padding: 0.45rem 0.85rem;
   border-radius: var(--radius-sm);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .deleteBtn:hover {
@@ -194,20 +204,100 @@
   background: transparent;
   border: 1px solid rgba(0, 255, 255, 0.3);
   color: var(--clr-cyan);
-  padding: 0.35rem 0.75rem;
+  padding: 0.45rem 0.85rem;
   border-radius: var(--radius-sm);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .editBtn:hover {
   background: rgba(0, 255, 255, 0.12);
 }
 
+/* ============================================================
+   RESPONSIVE SOCIAL MEDIA MANAGER ROW
+   ============================================================ */
+
+.socialRow {
+  display: grid;
+  grid-template-columns: auto auto 170px 1fr auto;
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--clr-border);
+}
+
+.socialInputs {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 0.5rem;
+}
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS (Mobile & Tablet)
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .card {
+    padding: 1.5rem;
+  }
+
+  .formGrid3 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .formGrid2,
   .formGrid3 {
     grid-template-columns: 1fr;
+  }
+
+  .socialRow {
+    grid-template-columns: auto auto 1fr auto;
+    row-gap: 0.75rem;
+  }
+
+  .socialInputs {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
+  }
+
+  .itemCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+
+  .itemActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 1.15rem 1rem;
+  }
+
+  .socialRow {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .toast {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    text-align: center;
   }
 }

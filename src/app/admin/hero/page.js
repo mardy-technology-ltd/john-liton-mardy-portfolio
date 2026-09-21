@@ -279,74 +279,67 @@ export default function AdminHeroPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'auto auto 180px 1fr auto',
-                  gap: '0.85rem',
-                  alignItems: 'center',
-                  padding: '0.85rem 1rem',
-                  borderRadius: 'var(--radius-md)',
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid var(--clr-border)',
-                }}
+                className={styles.socialRow}
               >
-                {/* Reorder Buttons */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <button
-                    type="button"
-                    onClick={() => handleMove(index, -1)}
-                    disabled={index === 0}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: index === 0 ? 'var(--clr-text-muted)' : 'var(--clr-text-primary)',
-                      cursor: index === 0 ? 'default' : 'pointer',
-                      fontSize: '0.75rem',
-                      padding: '0 2px',
-                    }}
-                    title="Move Up"
-                  >
-                    ▲
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleMove(index, 1)}
-                    disabled={index === socialLinks.length - 1}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: index === socialLinks.length - 1 ? 'var(--clr-text-muted)' : 'var(--clr-text-primary)',
-                      cursor: index === socialLinks.length - 1 ? 'default' : 'pointer',
-                      fontSize: '0.75rem',
-                      padding: '0 2px',
-                    }}
-                    title="Move Down"
-                  >
-                    ▼
-                  </button>
-                </div>
+                {/* Reorder Buttons & Icon */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <button
+                      type="button"
+                      onClick={() => handleMove(index, -1)}
+                      disabled={index === 0}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: index === 0 ? 'var(--clr-text-muted)' : 'var(--clr-text-primary)',
+                        cursor: index === 0 ? 'default' : 'pointer',
+                        fontSize: '0.75rem',
+                        padding: '0 2px',
+                      }}
+                      title="Move Up"
+                    >
+                      ▲
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleMove(index, 1)}
+                      disabled={index === socialLinks.length - 1}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: index === socialLinks.length - 1 ? 'var(--clr-text-muted)' : 'var(--clr-text-primary)',
+                        cursor: index === socialLinks.length - 1 ? 'default' : 'pointer',
+                        fontSize: '0.75rem',
+                        padding: '0 2px',
+                      }}
+                      title="Move Down"
+                    >
+                      ▼
+                    </button>
+                  </div>
 
-                {/* Live Icon Preview */}
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '8px',
-                    background: 'rgba(0, 255, 255, 0.08)',
-                    border: '1px solid var(--clr-border)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--clr-cyan)',
-                    flexShrink: 0,
-                  }}
-                  title={`Icon: ${item.platform}`}
-                >
-                  <SocialIcon platform={item.platform} size={18} />
+                  {/* Live Icon Preview */}
+                  <div
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '8px',
+                      background: 'rgba(0, 255, 255, 0.08)',
+                      border: '1px solid var(--clr-border)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'var(--clr-cyan)',
+                      flexShrink: 0,
+                    }}
+                    title={`Icon: ${item.platform}`}
+                  >
+                    <SocialIcon platform={item.platform} size={18} />
+                  </div>
                 </div>
 
                 {/* Platform Selector */}
-                <div>
+                <div style={{ minWidth: '130px' }}>
                   <select
                     value={item.platform}
                     onChange={(e) => handleUpdateSocial(index, 'platform', e.target.value)}
@@ -362,7 +355,7 @@ export default function AdminHeroPage() {
                 </div>
 
                 {/* Label & URL Inputs */}
-                <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '0.5rem' }}>
+                <div className={styles.socialInputs}>
                   <input
                     type="text"
                     value={item.label}
