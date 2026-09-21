@@ -15,28 +15,33 @@ export const personalInfo = {
 };
 
 export const skills = [
-  // Frontend
-  { name: "React", category: "Frontend", color: "#61DAFB", level: 95 },
-  { name: "Next.js", category: "Frontend", color: "#FFFFFF", level: 90 },
-  { name: "JavaScript", category: "Frontend", color: "#F7DF1E", level: 92 },
-  { name: "TypeScript", category: "Frontend", color: "#3178C6", level: 85 },
-  { name: "Three.js", category: "Frontend", color: "#049EF4", level: 75 },
-  { name: "CSS / SCSS", category: "Frontend", color: "#CC6699", level: 88 },
+  // Web & Frontend
+  { name: "React", category: "Web & Frontend", color: "#61DAFB", level: 95 },
+  { name: "Next.js", category: "Web & Frontend", color: "#FFFFFF", level: 90 },
+  { name: "JavaScript", category: "Web & Frontend", color: "#F7DF1E", level: 92 },
+  { name: "TypeScript", category: "Web & Frontend", color: "#3178C6", level: 85 },
+  { name: "Three.js", category: "Web & Frontend", color: "#049EF4", level: 75 },
+  { name: "CSS / SCSS", category: "Web & Frontend", color: "#CC6699", level: 88 },
 
-  // Backend
-  { name: "Node.js", category: "Backend", color: "#68A063", level: 88 },
-  { name: "Express.js", category: "Backend", color: "#AAAAAA", level: 85 },
-  { name: "Python", category: "Backend", color: "#FFD43B", level: 80 },
-  { name: "REST API", category: "Backend", color: "#FF6B6B", level: 90 },
-  { name: "GraphQL", category: "Backend", color: "#E10098", level: 70 },
+  // Mobile & App
+  { name: "React Native", category: "Mobile & App", color: "#61DAFB", level: 88 },
+  { name: "Flutter", category: "Mobile & App", color: "#54C5F8", level: 82 },
+  { name: "Firebase", category: "Mobile & App", color: "#FFCA28", level: 85 },
+  { name: "Mobile UI/UX", category: "Mobile & App", color: "#FF6B9D", level: 86 },
 
-  // Database & Cloud
-  { name: "MongoDB", category: "Database", color: "#4DB33D", level: 85 },
-  { name: "PostgreSQL", category: "Database", color: "#336791", level: 78 },
-  { name: "Firebase", category: "Cloud", color: "#FFCA28", level: 80 },
-  { name: "AWS", category: "Cloud", color: "#FF9900", level: 72 },
-  { name: "Docker", category: "DevOps", color: "#2496ED", level: 75 },
-  { name: "Git", category: "DevOps", color: "#F05032", level: 95 },
+  // Backend & APIs
+  { name: "Node.js", category: "Backend & APIs", color: "#68A063", level: 88 },
+  { name: "Express.js", category: "Backend & APIs", color: "#AAAAAA", level: 85 },
+  { name: "Python", category: "Backend & APIs", color: "#FFD43B", level: 80 },
+  { name: "REST API", category: "Backend & APIs", color: "#FF6B6B", level: 90 },
+  { name: "GraphQL", category: "Backend & APIs", color: "#E10098", level: 72 },
+
+  // Cloud & DevOps
+  { name: "MongoDB", category: "Cloud & DevOps", color: "#4DB33D", level: 85 },
+  { name: "PostgreSQL", category: "Cloud & DevOps", color: "#336791", level: 80 },
+  { name: "Docker", category: "Cloud & DevOps", color: "#2496ED", level: 78 },
+  { name: "AWS", category: "Cloud & DevOps", color: "#FF9900", level: 75 },
+  { name: "Git", category: "Cloud & DevOps", color: "#F05032", level: 95 },
 ];
 
 export const projects = [
