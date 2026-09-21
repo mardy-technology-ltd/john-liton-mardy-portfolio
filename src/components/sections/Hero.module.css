@@ -200,30 +200,6 @@
   color: var(--clr-text-muted);
 }
 
-/* Corner decorations */
-.cornerTL, .cornerBR {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  pointer-events: none;
-}
-
-.cornerTL {
-  top: 100px;
-  left: 20px;
-  border-top: 2px solid var(--clr-cyan);
-  border-left: 2px solid var(--clr-cyan);
-  opacity: 0.3;
-}
-
-.cornerBR {
-  bottom: 80px;
-  right: 20px;
-  border-bottom: 2px solid var(--clr-purple);
-  border-right: 2px solid var(--clr-purple);
-  opacity: 0.3;
-}
-
 @media (max-width: 1080px) {
   .heroGrid {
     grid-template-columns: 1fr;
