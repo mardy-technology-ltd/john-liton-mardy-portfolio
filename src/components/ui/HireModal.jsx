@@ -12,6 +12,7 @@ const projectTypes = [
   'Full-Time Role',
   'Consulting & Architecture',
   'Contract / Freelance',
+  'Other / Custom',
 ];
 
 const budgetRanges = [
@@ -218,17 +219,20 @@ export default function HireModal({ isOpen, onClose }) {
                   {/* Timeline */}
                   <div className={styles.inputGroup}>
                     <label className={styles.label}>Desired Timeline</label>
-                    <select
-                      value={form.timeline}
-                      onChange={(e) => setForm({ ...form, timeline: e.target.value })}
-                      className={styles.select}
-                    >
+                    <div className={styles.pillsGrid}>
                       {timelineOptions.map((t) => (
-                        <option key={t} value={t}>
+                        <button
+                          key={t}
+                          type="button"
+                          onClick={() => setForm({ ...form, timeline: t })}
+                          className={`${styles.pillBtn} ${
+                            form.timeline === t ? styles.pillActive : ''
+                          }`}
+                        >
                           {t}
-                        </option>
+                        </button>
                       ))}
-                    </select>
+                    </div>
                   </div>
 
                   {/* Message */}
