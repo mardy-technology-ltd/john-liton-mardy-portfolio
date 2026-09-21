@@ -1,0 +1,166 @@
+/* ============================================================
+   Navbar Styles — Clean version (no JLM abbreviation)
+   ============================================================ */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  padding: 1.25rem 2rem;
+  transition: all var(--transition-base);
+}
+
+.nav.scrolled {
+  background: rgba(3, 7, 18, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+  padding: 0.85rem 2rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* Logo — shows full name once hero name scrolls off */
+.logo {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex-shrink: 1;
+  transition: filter var(--transition-base);
+}
+
+.logo:hover { filter: drop-shadow(0 0 8px var(--clr-cyan)); }
+
+/* Full name style — same on mobile and desktop */
+.logoFullName {
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  background: linear-gradient(135deg, var(--clr-cyan), var(--clr-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Desktop links */
+.links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.link {
+  position: relative;
+  padding: 0.5rem 0.85rem;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clr-text-secondary);
+  transition: color var(--transition-base);
+  border-radius: var(--radius-sm);
+}
+
+.link:hover { color: var(--clr-text-primary); }
+.link.active { color: var(--clr-cyan); }
+
+.activeDot {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--clr-cyan);
+  box-shadow: 0 0 6px var(--clr-cyan);
+}
+
+/* CTA Button */
+.ctaBtn {
+  font-size: 0.72rem;
+  padding: 0.55rem 1.2rem;
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  flex-shrink: 0;
+}
+
+.bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--clr-text-primary);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-base);
+  transform-origin: center;
+}
+
+.bar.open:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.bar.open:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.bar.open:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile Menu */
+.mobileMenu {
+  background: rgba(3, 7, 18, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--clr-border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileLink {
+  padding: 1rem 2rem;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clr-text-secondary);
+  border: none;
+  background: transparent;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  display: block;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.06);
+  transition: all var(--transition-base);
+}
+
+.mobileLink:hover {
+  color: var(--clr-cyan);
+  padding-left: 2.5rem;
+  background: var(--clr-cyan-glow);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .links, .ctaBtn { display: none; }
+  .hamburger { display: flex; }
+  .logoFullName { font-size: 0.82rem; }
+}

@@ -1,0 +1,21 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.text {
+  color: var(--clr-cyan);
+}
+
+.cursor {
+  color: var(--clr-cyan);
+  animation: blink 0.8s step-end infinite;
+  font-weight: 300;
+  margin-left: 1px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
