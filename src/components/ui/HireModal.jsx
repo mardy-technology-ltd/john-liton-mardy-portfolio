@@ -74,8 +74,12 @@ export default function HireModal({ isOpen, onClose }) {
       addMessage({
         name: form.name.trim(),
         email: form.email.trim(),
+        source: 'hire',
+        projectType: form.projectType,
+        budget: form.budget,
+        timeline: form.timeline,
         subject: `[Hire Proposal: ${form.projectType}] ${form.budget}`,
-        message: `🎯 PROJECT / ROLE: ${form.projectType}\n💰 ESTIMATED BUDGET: ${form.budget}\n⏱️ TIMELINE: ${form.timeline}\n\n📋 DETAILS & REQUIREMENTS:\n${form.message || 'No additional note provided.'}`,
+        message: form.message.trim() || 'No additional note provided.',
       });
     }
 

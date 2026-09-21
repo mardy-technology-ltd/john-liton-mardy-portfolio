@@ -24,6 +24,8 @@ export default function Contact() {
         name: form.name.trim(),
         email: form.email.trim(),
         message: form.message.trim(),
+        source: 'contact',
+        subject: 'General Contact Message',
       });
     }
 

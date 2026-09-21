@@ -43,51 +43,83 @@
   line-height: 1.5;
 }
 
-/* Stats Row */
-.statsRow {
+/* Category Switcher Tabs */
+.categorySwitcher {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
-.statCard {
+.categoryBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   padding: 1.25rem 1.5rem;
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--clr-border);
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  color: var(--clr-text-primary);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
 }
 
-.statIcon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  background: rgba(0, 255, 255, 0.08);
-  border: 1px solid var(--clr-border);
+.categoryBtn:hover {
+  border-color: rgba(0, 255, 255, 0.4);
+  background: rgba(0, 255, 255, 0.03);
+  transform: translateY(-2px);
+}
+
+.categoryBtnActive {
+  background: rgba(0, 255, 255, 0.08) !important;
+  border-color: var(--clr-cyan) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.categoryLeft {
   display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.categoryIcon {
+  font-size: 1.5rem;
+}
+
+.categoryTitle {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--clr-text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.categorySub {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--clr-text-muted);
+}
+
+.categoryCount {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
-  flex-shrink: 0;
-}
-
-.statNumber {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--clr-text-primary);
-  line-height: 1.1;
-}
-
-.statLabel {
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--clr-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--clr-border);
+  color: var(--clr-text-primary);
+}
+
+.categoryCountActive {
+  background: rgba(0, 255, 255, 0.2);
+  border-color: var(--clr-cyan);
+  color: var(--clr-cyan);
+  box-shadow: 0 0 8px var(--clr-cyan);
 }
 
 /* Toolbar */
@@ -266,6 +298,28 @@
   color: var(--clr-text-muted);
 }
 
+.typeBadge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.typeHire {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+
+.typeContact {
+  background: rgba(0, 255, 255, 0.1);
+  color: var(--clr-cyan);
+  border: 1px solid rgba(0, 255, 255, 0.25);
+}
+
 .statusBadge {
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -292,6 +346,39 @@
   background: rgba(16, 185, 129, 0.15);
   color: #34d399;
   border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Proposal Specifications Grid */
+.proposalSpecs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  background: rgba(168, 85, 247, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  margin-bottom: 1.25rem;
+}
+
+.specItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.specLabel {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--clr-text-muted);
+}
+
+.specValue {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--clr-text-primary);
 }
 
 /* Message Body */
@@ -398,10 +485,13 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .statsRow {
+@media (max-width: 900px) {
+  .categorySwitcher {
     grid-template-columns: 1fr;
   }
+}
+
+@media (max-width: 768px) {
   .cardHeader {
     flex-direction: column;
     align-items: flex-start;

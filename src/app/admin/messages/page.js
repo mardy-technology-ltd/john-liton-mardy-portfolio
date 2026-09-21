@@ -7,6 +7,7 @@ import styles from './adminMessages.module.css';
 
 export default function AdminMessagesPage() {
   const { messages, deleteMessage, updateMessageStatus, personalInfo } = useCMS();
+  const [activeCategory, setActiveCategory] = useState('all'); // 'all' | 'hire' | 'contact'
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all'); // 'all' | 'unread' | 'read' | 'replied'
   const [toast, setToast] = useState('');
@@ -18,19 +19,35 @@ export default function AdminMessagesPage() {
 
   const messageList = messages || [];
 
-  // Filter messages
+  // Filter messages by category, status tab, and search query
   const filteredMessages = messageList.filter((m) => {
+    // 1. Category Filter (Hire vs Contact vs All)
+    const isHire = m.source === 'hire' || Boolean(m.projectType);
+    const matchesCategory =
+      activeCategory === 'all'
+        ? true
+        : activeCategory === 'hire'
+        ? isHire
+        : !isHire;
+
+    // 2. Status Tab Filter
     const matchesTab =
       activeTab === 'all' ? true : m.status === activeTab;
+
+    // 3. Search Query Filter
     const matchesSearch =
       m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       m.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       m.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (m.projectType && m.projectType.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (m.subject && m.subject.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesTab && matchesSearch;
+
+    return matchesCategory && matchesTab && matchesSearch;
   });
 
   const totalCount = messageList.length;
+  const hireCount = messageList.filter((m) => m.source === 'hire' || Boolean(m.projectType)).length;
+  const contactCount = messageList.filter((m) => m.source === 'contact' || (!m.source && !m.projectType)).length;
   const unreadCount = messageList.filter((m) => m.status === 'unread').length;
   const repliedCount = messageList.filter((m) => m.status === 'replied').length;
 
@@ -40,10 +57,23 @@ export default function AdminMessagesPage() {
   };
 
   const handleReplyEmail = (msg) => {
-    const subject = encodeURIComponent(`Re: Inquiry from Portfolio — ${personalInfo?.name || 'John Liton Mardy'}`);
-    const body = encodeURIComponent(
-      `Hi ${msg.name},\n\nThank you for reaching out through my portfolio website!\n\nRegarding your message:\n"${msg.message}"\n\n[Write your reply here]\n\nBest regards,\n${personalInfo?.name || 'John Liton Mardy'}\n${personalInfo?.title || 'Software Engineer'}`
-    );
+    const isHire = msg.source === 'hire' || Boolean(msg.projectType);
+    
+    let subject = '';
+    let body = '';
+
+    if (isHire) {
+      subject = encodeURIComponent(`Re: Your Project Proposal [${msg.projectType || 'Project Inquiry'}] — ${personalInfo?.name || 'John Liton Mardy'}`);
+      body = encodeURIComponent(
+        `Hi ${msg.name},\n\nThank you for reaching out regarding your project proposal "${msg.projectType || 'Project'}"!\n\nI reviewed your brief:\n- Project Type: ${msg.projectType || 'Custom Project'}\n- Budget Range: ${msg.budget || 'To be discussed'}\n- Timeline: ${msg.timeline || 'Flexible'}\n\nClient Details & Notes:\n"${msg.message}"\n\n[Write your reply / schedule a discovery call here]\n\nBest regards,\n${personalInfo?.name || 'John Liton Mardy'}\n${personalInfo?.title || 'Software Engineer'}`
+      );
+    } else {
+      subject = encodeURIComponent(`Re: Inquiry from Portfolio — ${personalInfo?.name || 'John Liton Mardy'}`);
+      body = encodeURIComponent(
+        `Hi ${msg.name},\n\nThank you for reaching out through my portfolio website!\n\nRegarding your message:\n"${msg.message}"\n\n[Write your reply here]\n\nBest regards,\n${personalInfo?.name || 'John Liton Mardy'}\n${personalInfo?.title || 'Software Engineer'}`
+      );
+    }
+
     window.location.href = `mailto:${msg.email}?subject=${subject}&body=${body}`;
     updateMessageStatus(msg.id, 'replied');
     showToast(`✓ Opened email client to reply to ${msg.name}`);
@@ -111,9 +141,9 @@ export default function AdminMessagesPage() {
       <div className={styles.pageHeader}>
         <div>
           <span className="section-tag">INBOX &amp; LEADS</span>
-          <h1 className={styles.title}>Client Inquiries &amp; Messages</h1>
+          <h1 className={styles.title}>Client Inquiries &amp; Proposals</h1>
           <p className={styles.subtitle}>
-            Read contact inquiries sent directly from your live portfolio website and reply in 1-click via email.
+            Manage hire proposals and general contact messages sent directly from your live portfolio website.
           </p>
         </div>
 
@@ -129,41 +159,58 @@ export default function AdminMessagesPage() {
         )}
       </div>
 
-      {/* Stats Row */}
-      <div className={styles.statsRow}>
-        <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ color: 'var(--clr-cyan)' }}>
-            📬
-          </div>
-          <div>
-            <div className={styles.statNumber}>{totalCount}</div>
-            <div className={styles.statLabel}>Total Inquiries</div>
-          </div>
-        </div>
-
-        <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ color: '#00ffff' }}>
-            ⚡
-          </div>
-          <div>
-            <div className={styles.statNumber} style={{ color: unreadCount > 0 ? 'var(--clr-cyan)' : 'inherit' }}>
-              {unreadCount}
+      {/* Category Switcher Tabs */}
+      <div className={styles.categorySwitcher}>
+        <button
+          type="button"
+          onClick={() => setActiveCategory('hire')}
+          className={`${styles.categoryBtn} ${activeCategory === 'hire' ? styles.categoryBtnActive : ''}`}
+        >
+          <div className={styles.categoryLeft}>
+            <span className={styles.categoryIcon}>💼</span>
+            <div>
+              <div className={styles.categoryTitle}>Hire Proposals</div>
+              <div className={styles.categorySub}>Submitted from Hire Me modal</div>
             </div>
-            <div className={styles.statLabel}>Unread Messages</div>
           </div>
-        </div>
+          <span className={`${styles.categoryCount} ${activeCategory === 'hire' ? styles.categoryCountActive : ''}`}>
+            {hireCount}
+          </span>
+        </button>
 
-        <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ color: '#34d399' }}>
-            ✉️
-          </div>
-          <div>
-            <div className={styles.statNumber} style={{ color: '#34d399' }}>
-              {repliedCount}
+        <button
+          type="button"
+          onClick={() => setActiveCategory('contact')}
+          className={`${styles.categoryBtn} ${activeCategory === 'contact' ? styles.categoryBtnActive : ''}`}
+        >
+          <div className={styles.categoryLeft}>
+            <span className={styles.categoryIcon}>✉️</span>
+            <div>
+              <div className={styles.categoryTitle}>Contact Messages</div>
+              <div className={styles.categorySub}>Submitted from Contact form</div>
             </div>
-            <div className={styles.statLabel}>Replied Leads</div>
           </div>
-        </div>
+          <span className={`${styles.categoryCount} ${activeCategory === 'contact' ? styles.categoryCountActive : ''}`}>
+            {contactCount}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveCategory('all')}
+          className={`${styles.categoryBtn} ${activeCategory === 'all' ? styles.categoryBtnActive : ''}`}
+        >
+          <div className={styles.categoryLeft}>
+            <span className={styles.categoryIcon}>📁</span>
+            <div>
+              <div className={styles.categoryTitle}>All Inquiries</div>
+              <div className={styles.categorySub}>Combined inbox stream</div>
+            </div>
+          </div>
+          <span className={`${styles.categoryCount} ${activeCategory === 'all' ? styles.categoryCountActive : ''}`}>
+            {totalCount}
+          </span>
+        </button>
       </div>
 
       {/* Toolbar */}
@@ -173,17 +220,17 @@ export default function AdminMessagesPage() {
           <span className={styles.searchIcon}>🔍</span>
           <input
             type="text"
-            placeholder="Search messages by name, email, or content..."
+            placeholder="Search inquiries by name, email, project..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={styles.searchInput}
           />
         </div>
 
-        {/* Filter Tabs */}
+        {/* Status Filter Tabs */}
         <div className={styles.filterTabs}>
           {[
-            { id: 'all', label: `All (${totalCount})` },
+            { id: 'all', label: 'All Status' },
             { id: 'unread', label: `Unread (${unreadCount})` },
             { id: 'read', label: 'Read' },
             { id: 'replied', label: `Replied (${repliedCount})` },
@@ -206,6 +253,7 @@ export default function AdminMessagesPage() {
           {filteredMessages.map((msg) => {
             const isUnread = msg.status === 'unread';
             const isReplied = msg.status === 'replied';
+            const isHire = msg.source === 'hire' || Boolean(msg.projectType);
 
             return (
               <motion.div
@@ -240,6 +288,13 @@ export default function AdminMessagesPage() {
                       {formatDate(msg.date)}
                     </span>
                     <span
+                      className={`${styles.typeBadge} ${
+                        isHire ? styles.typeHire : styles.typeContact
+                      }`}
+                    >
+                      {isHire ? '💼 Hire Proposal' : '✉️ Contact Msg'}
+                    </span>
+                    <span
                       className={`${styles.statusBadge} ${
                         isUnread
                           ? styles.statusUnread
@@ -252,6 +307,26 @@ export default function AdminMessagesPage() {
                     </span>
                   </div>
                 </div>
+
+                {/* If Hire Inquiry -> Show Proposal Specification Chips */}
+                {isHire && (
+                  <div className={styles.proposalSpecs}>
+                    <div className={styles.specItem}>
+                      <span className={styles.specLabel}>🎯 Project Type</span>
+                      <span className={styles.specValue}>{msg.projectType || 'Custom Project'}</span>
+                    </div>
+                    <div className={styles.specItem}>
+                      <span className={styles.specLabel}>💰 Budget Range</span>
+                      <span className={styles.specValue} style={{ color: 'var(--clr-cyan)' }}>
+                        {msg.budget || 'To be discussed'}
+                      </span>
+                    </div>
+                    <div className={styles.specItem}>
+                      <span className={styles.specLabel}>⏱️ Desired Timeline</span>
+                      <span className={styles.specValue}>{msg.timeline || 'Flexible'}</span>
+                    </div>
+                  </div>
+                )}
 
                 {/* Message Body */}
                 <div className={styles.messageBody}>{msg.message}</div>
@@ -298,12 +373,16 @@ export default function AdminMessagesPage() {
           <div className={styles.emptyState}>
             <div className={styles.emptyIcon}>📭</div>
             <h3 style={{ fontSize: '1.2rem', color: 'var(--clr-text-primary)', marginBottom: '0.4rem' }}>
-              No Messages Found
+              No Inquiries Found
             </h3>
             <p style={{ fontSize: '0.88rem' }}>
               {searchQuery
                 ? `No inquiries matching "${searchQuery}". Try a different keyword.`
-                : 'Your inbox is clear. Messages submitted through your contact form will show up here.'}
+                : activeCategory === 'hire'
+                ? 'No Hire Proposals yet. Client submissions from the "HIRE ME" modal will appear here.'
+                : activeCategory === 'contact'
+                ? 'No Contact Messages yet. Messages sent from the Contact form will appear here.'
+                : 'Your inbox is clear. Messages submitted through your portfolio will show up here.'}
             </p>
           </div>
         )}
@@ -311,3 +390,4 @@ export default function AdminMessagesPage() {
     </div>
   );
 }
+
