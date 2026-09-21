@@ -130,7 +130,7 @@ export default function HireModal({ isOpen, onClose }) {
               </div>
             ) : (
               /* Form State */
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} className={styles.form}>
                 {/* Header */}
                 <div className={styles.header}>
                   <div>
