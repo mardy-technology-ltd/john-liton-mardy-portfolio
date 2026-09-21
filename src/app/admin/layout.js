@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCMS } from '@/context/CMSContext';
 import styles from './adminLayout.module.css';
 
@@ -21,19 +22,44 @@ const navItems = [
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { cmsData, resetToDefaults, unreadMessagesCount } = useCMS();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  // Custom Modal States
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   // Close mobile drawer on navigation
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  const handleReset = () => {
-    if (window.confirm('Are you sure you want to reset all site customizations to defaults?')) {
-      resetToDefaults();
-      alert('All portfolio content & theme settings reset to default.');
+  // If on login page, render clean standalone layout
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+
+  const handleLogoutConfirm = async () => {
+    setLoggingOut(true);
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setShowLogoutModal(false);
+      router.push('/admin/login');
+      router.refresh();
+    } catch (err) {
+      console.error('Logout failed:', err);
+      setShowLogoutModal(false);
+      router.push('/admin/login');
+    } finally {
+      setLoggingOut(false);
     }
+  };
+
+  const handleResetConfirm = () => {
+    resetToDefaults();
+    setShowResetModal(false);
   };
 
   return (
@@ -112,9 +138,34 @@ export default function AdminLayout({ children }) {
             <span className={styles.pulseDot} />
             <span>Theme: <strong>{cmsData?.themeConfig?.activeTheme || 'Default'}</strong></span>
           </div>
-          <button onClick={handleReset} className={styles.resetBtn} title="Reset all changes to factory defaults">
-            Reset to Defaults
-          </button>
+          
+          <div style={{ display: 'flex', gap: '0.5rem', width: '100%', marginTop: '0.5rem' }}>
+            <button
+              type="button"
+              onClick={() => setShowResetModal(true)}
+              className={styles.resetBtn}
+              style={{ flex: 1, padding: '0.45rem 0.6rem', fontSize: '0.75rem' }}
+              title="Reset all changes to factory defaults"
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowLogoutModal(true)}
+              disabled={loggingOut}
+              className="btn btn-outline"
+              style={{
+                flex: 1,
+                padding: '0.45rem 0.6rem',
+                fontSize: '0.75rem',
+                borderColor: 'rgba(255, 0, 85, 0.4)',
+                color: '#ff5577',
+              }}
+              title="Logout from CMS"
+            >
+              🚪 Logout
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -144,7 +195,25 @@ export default function AdminLayout({ children }) {
             </div>
           </div>
 
-          <div className={styles.headerActions}>
+          <div className={styles.headerActions} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <span
+              style={{
+                fontSize: '0.75rem',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--clr-cyan)',
+                background: 'rgba(0, 255, 255, 0.08)',
+                border: '1px solid rgba(0, 255, 255, 0.25)',
+                padding: '0.35rem 0.65rem',
+                borderRadius: '6px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+              }}
+            >
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00ff66', boxShadow: '0 0 6px #00ff66' }} />
+              Authorized
+            </span>
+
             <Link
               href="/"
               target="_blank"
@@ -153,6 +222,23 @@ export default function AdminLayout({ children }) {
             >
               <span>View Site ↗</span>
             </Link>
+
+            <button
+              type="button"
+              onClick={() => setShowLogoutModal(true)}
+              disabled={loggingOut}
+              className="btn btn-outline"
+              style={{
+                padding: '0.45rem 0.85rem',
+                fontSize: '0.8rem',
+                whiteSpace: 'nowrap',
+                borderColor: 'rgba(255, 0, 85, 0.35)',
+                color: '#ff5577',
+              }}
+              title="Logout from Admin"
+            >
+              <span>🚪 Logout</span>
+            </button>
           </div>
         </header>
 
@@ -161,6 +247,108 @@ export default function AdminLayout({ children }) {
           {children}
         </main>
       </div>
+
+      {/* ============================================================
+          1. CUSTOM CYBERPUNK LOGOUT CONFIRMATION MODAL
+          ============================================================ */}
+      <AnimatePresence>
+        {showLogoutModal && (
+          <div className={styles.modalOverlay} onClick={() => !loggingOut && setShowLogoutModal(false)}>
+            <motion.div
+              className={styles.modalCard}
+              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+            >
+              {/* Corner Tech Brackets */}
+              <div style={{ position: 'absolute', top: -2, left: -2, width: 16, height: 16, borderTop: '3px solid #ff0055', borderLeft: '3px solid #ff0055' }} />
+              <div style={{ position: 'absolute', top: -2, right: -2, width: 16, height: 16, borderTop: '3px solid var(--clr-purple)', borderRight: '3px solid var(--clr-purple)' }} />
+              <div style={{ position: 'absolute', bottom: -2, left: -2, width: 16, height: 16, borderBottom: '3px solid var(--clr-purple)', borderLeft: '3px solid var(--clr-purple)' }} />
+              <div style={{ position: 'absolute', bottom: -2, right: -2, width: 16, height: 16, borderBottom: '3px solid #ff0055', borderRight: '3px solid #ff0055' }} />
+
+              <div className={styles.modalIconWrapper}>
+                <span>🚪</span>
+              </div>
+
+              <h2 className={styles.modalTitle}>Terminate Session?</h2>
+              <p className={styles.modalDesc}>
+                Are you sure you want to end your current admin session? You will be signed out and need your security credentials to re-enter.
+              </p>
+
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  disabled={loggingOut}
+                  onClick={() => setShowLogoutModal(false)}
+                  className={styles.modalCancelBtn}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={loggingOut}
+                  onClick={handleLogoutConfirm}
+                  className={styles.modalConfirmBtn}
+                >
+                  {loggingOut ? 'Signing out...' : '✓ Yes, Logout'}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ============================================================
+          2. CUSTOM CYBERPUNK RESET DEFAULTS MODAL
+          ============================================================ */}
+      <AnimatePresence>
+        {showResetModal && (
+          <div className={styles.modalOverlay} onClick={() => setShowResetModal(false)}>
+            <motion.div
+              className={`${styles.modalCard} ${styles.modalCardReset}`}
+              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+            >
+              {/* Corner Tech Brackets */}
+              <div style={{ position: 'absolute', top: -2, left: -2, width: 16, height: 16, borderTop: '3px solid var(--clr-cyan)', borderLeft: '3px solid var(--clr-cyan)' }} />
+              <div style={{ position: 'absolute', top: -2, right: -2, width: 16, height: 16, borderTop: '3px solid var(--clr-purple)', borderRight: '3px solid var(--clr-purple)' }} />
+              <div style={{ position: 'absolute', bottom: -2, left: -2, width: 16, height: 16, borderBottom: '3px solid var(--clr-purple)', borderLeft: '3px solid var(--clr-purple)' }} />
+              <div style={{ position: 'absolute', bottom: -2, right: -2, width: 16, height: 16, borderBottom: '3px solid var(--clr-cyan)', borderRight: '3px solid var(--clr-cyan)' }} />
+
+              <div className={`${styles.modalIconWrapper} ${styles.modalIconWrapperReset}`}>
+                <span>⚡</span>
+              </div>
+
+              <h2 className={styles.modalTitle} style={{ color: 'var(--clr-cyan)' }}>Reset To Defaults?</h2>
+              <p className={styles.modalDesc}>
+                This will reset all portfolio CMS customizations, active theme colors, and section settings back to their factory defaults.
+              </p>
+
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  onClick={() => setShowResetModal(false)}
+                  className={styles.modalCancelBtn}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResetConfirm}
+                  className={`${styles.modalConfirmBtn} ${styles.modalConfirmBtnReset}`}
+                >
+                  ✓ Reset All Settings
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
