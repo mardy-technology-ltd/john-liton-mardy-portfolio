@@ -5,14 +5,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCMS } from '@/context/CMSContext';
 import styles from './Skills.module.css';
 
-const categories = ['Web & Frontend', 'Mobile & App', 'Backend & APIs', 'Cloud & DevOps'];
+const defaultCategories = ['Web & Frontend', 'Mobile & App', 'Backend & APIs', 'Cloud & DevOps'];
 
 export default function Skills() {
   const { cmsData } = useCMS();
-  const [activeCategory, setActiveCategory] = useState('Web & Frontend');
-
   const allSkills = cmsData?.skills || [];
-  const filtered = allSkills.filter((s) => s.category === activeCategory);
+
+  // Dynamically extract unique categories, keeping defaults in priority order
+  const existingCategories = Array.from(new Set(allSkills.map((s) => s.category).filter(Boolean)));
+  const categories = existingCategories.length > 0 ? existingCategories : defaultCategories;
+
+  const [activeCategory, setActiveCategory] = useState(categories[0] || 'Web & Frontend');
+
+  // Handle case if active category is deleted
+  const currentActive = categories.includes(activeCategory) ? activeCategory : categories[0];
+  const filtered = allSkills.filter((s) => s.category === currentActive);
 
   return (
     <section id="skills" className={`section ${styles.skills}`}>

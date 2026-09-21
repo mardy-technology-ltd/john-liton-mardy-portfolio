@@ -442,3 +442,20 @@ ul, ol { list-style: none; }
   flex-wrap: wrap;
   gap: var(--spacing-sm);
 }
+
+/* --- Native Form Elements Dark Theme Fix --- */
+select {
+  color-scheme: dark;
+}
+
+optgroup {
+  background: #080d1a !important;
+  color: #00ffff !important;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+option {
+  background: #0d1326 !important;
+  color: #f1f5f9 !important;
+}

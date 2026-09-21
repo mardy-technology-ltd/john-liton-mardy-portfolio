@@ -52,14 +52,17 @@ export function CMSProvider({ children }) {
     setIsLoaded(true);
   }, []);
 
-  // Save changes to localStorage
-  const saveState = (newState) => {
-    setData(newState);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
-    } catch (e) {
-      console.error('Failed to save CMS state to localStorage', e);
-    }
+  // Save changes to localStorage with functional state updates
+  const saveState = (updater) => {
+    setData((prev) => {
+      const newState = typeof updater === 'function' ? updater(prev) : updater;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
+      } catch (e) {
+        console.error('Failed to save CMS state to localStorage', e);
+      }
+      return newState;
+    });
   };
 
   // Dynamically inject CSS variables into document root whenever theme changes
@@ -101,77 +104,77 @@ export function CMSProvider({ children }) {
 
   // Actions
   const setTheme = (themeId) => {
-    saveState({
-      ...data,
+    saveState((prev) => ({
+      ...prev,
       themeConfig: {
-        ...data.themeConfig,
+        ...prev.themeConfig,
         activeTheme: themeId,
         customColors: null, // clear custom overrides when selecting preset
       },
-    });
+    }));
   };
 
   const setCustomColors = (customColors) => {
-    saveState({
-      ...data,
+    saveState((prev) => ({
+      ...prev,
       themeConfig: {
-        ...data.themeConfig,
+        ...prev.themeConfig,
         activeTheme: 'custom',
         customColors,
       },
-    });
+    }));
   };
 
   const updateThemeConfig = (config) => {
-    saveState({
-      ...data,
+    saveState((prev) => ({
+      ...prev,
       themeConfig: {
-        ...data.themeConfig,
+        ...prev.themeConfig,
         ...config,
       },
-    });
+    }));
   };
 
   const updatePersonalInfo = (info) => {
-    saveState({
-      ...data,
-      personalInfo: { ...data.personalInfo, ...info },
-    });
+    saveState((prev) => ({
+      ...prev,
+      personalInfo: { ...prev.personalInfo, ...info },
+    }));
   };
 
   const updateAbout = (aboutData) => {
-    saveState({
-      ...data,
-      about: { ...data.about, ...aboutData },
-    });
+    saveState((prev) => ({
+      ...prev,
+      about: { ...prev.about, ...aboutData },
+    }));
   };
 
   const updateSkills = (skillsList) => {
-    saveState({
-      ...data,
+    saveState((prev) => ({
+      ...prev,
       skills: skillsList,
-    });
+    }));
   };
 
   const updateProjects = (projectsList) => {
-    saveState({
-      ...data,
+    saveState((prev) => ({
+      ...prev,
       projects: projectsList,
-    });
+    }));
   };
 
   const updateExperience = (experienceList) => {
-    saveState({
-      ...data,
+    saveState((prev) => ({
+      ...prev,
       experience: experienceList,
-    });
+    }));
   };
 
   const updateBlogs = (blogsList) => {
-    saveState({
-      ...data,
+    saveState((prev) => ({
+      ...prev,
       blogs: blogsList,
-    });
+    }));
   };
 
   const addMessage = (messageObj) => {
@@ -181,40 +184,37 @@ export function CMSProvider({ children }) {
       status: 'unread',
       ...messageObj,
     };
-    const updated = [newMsg, ...(data.messages || [])];
-    saveState({
-      ...data,
-      messages: updated,
-    });
+    saveState((prev) => ({
+      ...prev,
+      messages: [newMsg, ...(prev.messages || [])],
+    }));
     return newMsg;
   };
 
   const deleteMessage = (id) => {
-    const updated = (data.messages || []).filter((m) => m.id !== id);
-    saveState({
-      ...data,
-      messages: updated,
-    });
+    saveState((prev) => ({
+      ...prev,
+      messages: (prev.messages || []).filter((m) => m.id !== id),
+    }));
   };
 
   const updateMessageStatus = (id, newStatus) => {
-    const updated = (data.messages || []).map((m) =>
-      m.id === id ? { ...m, status: newStatus } : m
-    );
-    saveState({
-      ...data,
-      messages: updated,
-    });
+    saveState((prev) => ({
+      ...prev,
+      messages: (prev.messages || []).map((m) =>
+        m.id === id ? { ...m, status: newStatus } : m
+      ),
+    }));
   };
 
   const toggleSectionVisibility = (sectionKey) => {
-    saveState({
-      ...data,
+    saveState((prev) => ({
+      ...prev,
       sectionVisibility: {
-        ...data.sectionVisibility,
-        [sectionKey]: !data.sectionVisibility[sectionKey],
+        ...prev.sectionVisibility,
+        [sectionKey]: !prev.sectionVisibility[sectionKey],
       },
-    });
+    }));
   };
 
   const resetToDefaults = () => {

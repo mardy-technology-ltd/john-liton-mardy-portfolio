@@ -452,6 +452,72 @@ export const bgAnimationOptions = [
   },
 ];
 
+export const avatarAnimationOptions = [
+  // 1. Organic & Fluid
+  {
+    category: '🔮 Organic & Fluid',
+    options: [
+      { id: 'morph', name: 'Fluid Liquid Morphing Bubble', desc: '8-point continuous fluid blob deformation', icon: '🫧' },
+      { id: 'lava-lamp', name: 'Lava Lamp Viscous Wave', desc: 'Slow, hypnotic undulating density flow', icon: '🌋' },
+      { id: 'jelly-bounce', name: 'Jelly Elastic Squash & Stretch', desc: 'Smooth springy organic elastic motion', icon: '🍮' },
+    ],
+  },
+  // 2. Sci-Fi & Cyberpunk
+  {
+    category: '⚡ Sci-Fi & Cyberpunk',
+    options: [
+      { id: 'cyber-glitch', name: 'Holographic Cyber Glitch', desc: 'RGB chromatic split twitch + scan displacement', icon: '👾' },
+      { id: 'laser-scanner', name: 'Laser HUD Target Scanner', desc: 'Vertical glowing neon laser beam sweep', icon: '🎯' },
+      { id: 'neon-pulsar', name: 'Breathing Hyper Neon Pulsar', desc: 'Rhythmic cyan & magenta neon brightness flare', icon: '💥' },
+    ],
+  },
+  // 3. Space & Cosmic 3D
+  {
+    category: '🪐 Space & Cosmic 3D',
+    options: [
+      { id: 'zero-g-float', name: 'Zero-G Cosmic Levitation', desc: 'Smooth 3D zero-gravity floating with tilt drift', icon: '🚀' },
+      { id: 'event-horizon', name: 'Cosmic Event Horizon Nebula Flare', desc: 'Deep space cosmic aura breathing', icon: '🌌' },
+      { id: 'quantum-orbit', name: 'Quantum Atomic Pulsing Orbit', desc: 'Atomic quantum core resonance pulse', icon: '⚛️' },
+    ],
+  },
+  // 4. Clean & Modern Minimal
+  {
+    category: '💎 Clean & Modern Minimal',
+    options: [
+      { id: 'rotating-conic', name: 'Conic Laser Spectrum Border', desc: 'Rotating neon rainbow laser border trace', icon: '🌈' },
+      { id: 'pulse-glow', name: 'Soft Breathing Glow Halo', desc: 'Gentle aesthetic ambient glow pulsation', icon: '✨' },
+      { id: 'pure-static', name: 'Pure Static Focus Mode (No FX)', desc: 'Zero deformation, crisp professional portrait', icon: '🛡️' },
+    ],
+  },
+];
+
+export const avatarShapeOptions = [
+  {
+    category: '🫧 Organic Shapes',
+    options: [
+      { id: 'morphing-bubble', name: 'Morphing Organic Bubble', desc: 'Continuous liquid morphing boundary' },
+      { id: 'teardrop', name: 'Fluid Teardrop Silhouette', desc: 'Dynamic curved waterdrop geometry' },
+    ],
+  },
+  {
+    category: '⭕ Geometric Shapes',
+    options: [
+      { id: 'modern-circle', name: 'Modern Clean Circle (360°)', desc: 'Sleek circle with glowing border' },
+      { id: 'rounded-squircle', name: 'Smooth Squircle (32px)', desc: 'Apple-inspired rounded squircle' },
+      { id: 'smooth-card', name: 'Clean Tech Card (16px)', desc: 'Minimalist rounded rectangle' },
+    ],
+  },
+  {
+    category: '⬢ Cyberpunk & Tech Shapes',
+    options: [
+      { id: 'cyber-hexagon', name: 'Cyber Hexagon (6-Sided)', desc: 'Angular futuristic polygon' },
+      { id: 'cyber-octagon', name: 'Cyber Octagon (Chamfered)', desc: 'Military tech chamfered corner frame' },
+      { id: 'diamond-shield', name: 'Angular Diamond Shield', desc: 'Vanguard tactical shield contour' },
+      { id: 'cyber-box', name: 'Cyber Reticle Tech Frame', desc: 'Sharp neon cyber tech container' },
+    ],
+  },
+];
+
 export const availableSocialPlatforms = [
   { id: 'linkedin', name: 'LinkedIn' },
   { id: 'github', name: 'GitHub' },
@@ -470,10 +536,39 @@ export const availableSocialPlatforms = [
   { id: 'globe', name: 'Personal Website / Other' },
 ];
 
+export function formatSocialUrl(url, platform = '') {
+  if (!url || typeof url !== 'string') return '#';
+  let trimmed = url.trim();
+  if (!trimmed || trimmed === '#' || trimmed === 'https://' || trimmed === 'http://') {
+    return '#';
+  }
+
+  // If user entered email address or mailto
+  if (platform === 'email' || (trimmed.includes('@') && !trimmed.startsWith('http') && !trimmed.startsWith('mailto:'))) {
+    return trimmed.startsWith('mailto:') ? trimmed : `mailto:${trimmed}`;
+  }
+
+  // If user entered phone number for WhatsApp
+  if (platform === 'whatsapp' && !trimmed.startsWith('http') && !trimmed.startsWith('https://wa.me')) {
+    const cleanPhone = trimmed.replace(/[^0-9+]/g, '');
+    if (cleanPhone.length >= 6) {
+      return `https://wa.me/${cleanPhone.replace('+', '')}`;
+    }
+  }
+
+  // Check for absolute protocol
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('mailto:') || trimmed.startsWith('tel:')) {
+    return trimmed;
+  }
+
+  // Prepend https://
+  return `https://${trimmed}`;
+}
+
 export const defaultSocialLinks = [
-  { id: 's1', platform: 'linkedin', label: 'LinkedIn', url: 'https://linkedin.com/in/johnlitonmardy' },
-  { id: 's2', platform: 'github', label: 'GitHub', url: 'https://github.com/johnlitonmardy' },
-  { id: 's3', platform: 'email', label: 'Email', url: 'mailto:john.liton.mardy@example.com' },
+  { id: 's1', platform: 'linkedin', label: 'LinkedIn', url: 'https://linkedin.com/in/johnlitonmardy', placement: 'both' },
+  { id: 's2', platform: 'github', label: 'GitHub', url: 'https://github.com/johnlitonmardy', placement: 'both' },
+  { id: 's3', platform: 'email', label: 'Email', url: 'mailto:john.liton.mardy@example.com', placement: 'both' },
 ];
 
 export const defaultMessages = [
@@ -540,9 +635,22 @@ export const defaultCMSData = {
   about: {
     label: "Who I Am",
     title: "About Me",
+    subtitle: "A glimpse into who I am, what drives me, and the journey that shaped my craft.",
+    secondaryBio: "I specialize in building full-stack web & mobile applications and have a deep passion for 3D interactive digital experiences. I believe great software is both technically sound and a joy to use.",
+    avatarImage: "/profile.jpg",
+    avatarShape: "morphing-bubble", // morphing-bubble | modern-circle | rounded-squircle | cyber-hexagon | cyber-box
+    avatarAnimation: "morph", // morph | pulse-glow | float | static
+    showOrbitRings: true,
+    showCornerBrackets: true,
+    whatIDo: [
+      'Build scalable full-stack web & mobile apps',
+      'Create immersive 3D web experiences',
+      'Architect clean, maintainable codebases',
+      'Optimize for performance & accessibility',
+    ],
     yearsExperience: "4+",
-    projectsCompleted: "20+",
-    happyClients: "15+",
+    projectsCompleted: "25+",
+    happyClients: "18+",
     stats: [
       { label: "Years Experience", value: "4+" },
       { label: "Completed Projects", value: "25+" },

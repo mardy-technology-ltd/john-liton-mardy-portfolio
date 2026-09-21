@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useCMS } from '@/context/CMSContext';
+import { formatSocialUrl } from '@/data/cmsData';
 import SocialIcon from '@/components/ui/SocialIcon';
 import styles from './Contact.module.css';
 
@@ -71,29 +72,31 @@ export default function Contact() {
             {/* Sleek Social Icon Pills */}
             <div className={styles.socialPills}>
               {(personalInfo?.socialLinks || [
-                { id: 's1', platform: 'linkedin', label: 'LinkedIn', url: personalInfo?.linkedin || 'https://linkedin.com' },
-                { id: 's2', platform: 'github', label: 'GitHub', url: personalInfo?.github || 'https://github.com' },
-                { id: 's3', platform: 'email', label: 'Email', url: personalInfo?.email || 'mailto:john.liton.mardy@example.com' }
-              ]).map((item) => {
-                const rawUrl = item.url || '#';
-                const isEmail = item.platform === 'email' || (rawUrl.includes('@') && !rawUrl.startsWith('http') && !rawUrl.startsWith('mailto:'));
-                const href = isEmail && !rawUrl.startsWith('mailto:') ? `mailto:${rawUrl}` : rawUrl;
-                const isMailto = href.startsWith('mailto:');
+                { id: 's1', platform: 'linkedin', label: 'LinkedIn', url: personalInfo?.linkedin || 'https://linkedin.com', placement: 'both' },
+                { id: 's2', platform: 'github', label: 'GitHub', url: personalInfo?.github || 'https://github.com', placement: 'both' },
+                { id: 's3', platform: 'email', label: 'Email', url: personalInfo?.email || 'mailto:john.liton.mardy@example.com', placement: 'both' }
+              ])
+                .filter((item) => item.placement === 'both' || item.placement === 'footer' || !item.placement)
+                .map((item) => {
+                  const rawUrl = item.url || (item.label?.startsWith('http') ? item.label : '#');
+                  const href = formatSocialUrl(rawUrl, item.platform);
+                  const isMailto = href.startsWith('mailto:');
+                  const isExternal = !isMailto && href !== '#' && (href.startsWith('http://') || href.startsWith('https://'));
 
-                return (
-                  <a
-                    key={item.id || item.platform}
-                    href={href}
-                    target={isMailto ? undefined : '_blank'}
-                    rel={isMailto ? undefined : 'noopener noreferrer'}
-                    className={styles.socialPill}
-                  >
-                    <SocialIcon platform={item.platform} size={16} />
-                    <span>{item.label || item.platform}</span>
-                    <span className={styles.socialArrow}>↗</span>
-                  </a>
-                );
-              })}
+                  return (
+                    <a
+                      key={item.id || item.platform}
+                      href={href}
+                      target={isExternal ? '_blank' : undefined}
+                      rel={isExternal ? 'noopener noreferrer' : undefined}
+                      className={styles.socialPill}
+                    >
+                      <SocialIcon platform={item.platform} size={16} />
+                      <span>{item.label || item.platform}</span>
+                      <span className={styles.socialArrow}>↗</span>
+                    </a>
+                  );
+                })}
             </div>
 
             {/* Availability Status Card */}
@@ -203,28 +206,30 @@ export default function Contact() {
       <footer className={styles.footer}>
         <div className={styles.footerSocials}>
           {(personalInfo?.socialLinks || [
-            { id: 'f-linkedin', platform: 'linkedin', label: 'LinkedIn', url: personalInfo?.linkedin || 'https://linkedin.com' },
-            { id: 'f-github', platform: 'github', label: 'GitHub', url: personalInfo?.github || 'https://github.com' },
-            { id: 'f-email', platform: 'email', label: 'Email', url: personalInfo?.email || 'mailto:john.liton.mardy@example.com' }
-          ]).map((s) => {
-            const rawUrl = s.url || '#';
-            const isEmail = s.platform === 'email' || (rawUrl.includes('@') && !rawUrl.startsWith('http') && !rawUrl.startsWith('mailto:'));
-            const href = isEmail && !rawUrl.startsWith('mailto:') ? `mailto:${rawUrl}` : rawUrl;
-            const isMailto = href.startsWith('mailto:');
+            { id: 'f-linkedin', platform: 'linkedin', label: 'LinkedIn', url: personalInfo?.linkedin || 'https://linkedin.com', placement: 'both' },
+            { id: 'f-github', platform: 'github', label: 'GitHub', url: personalInfo?.github || 'https://github.com', placement: 'both' },
+            { id: 'f-email', platform: 'email', label: 'Email', url: personalInfo?.email || 'mailto:john.liton.mardy@example.com', placement: 'both' }
+          ])
+            .filter((s) => s.placement === 'both' || s.placement === 'footer' || !s.placement)
+            .map((s) => {
+              const rawUrl = s.url || (s.label?.startsWith('http') ? s.label : '#');
+              const href = formatSocialUrl(rawUrl, s.platform);
+              const isMailto = href.startsWith('mailto:');
+              const isExternal = !isMailto && href !== '#' && (href.startsWith('http://') || href.startsWith('https://'));
 
-            return (
-              <a
-                key={s.id || s.platform}
-                href={href}
-                target={isMailto ? undefined : '_blank'}
-                rel={isMailto ? undefined : 'noopener noreferrer'}
-                className={styles.footerSocialLink}
-                title={s.label || s.platform}
-              >
-                <SocialIcon platform={s.platform} size={18} />
-              </a>
-            );
-          })}
+              return (
+                <a
+                  key={s.id || s.platform}
+                  href={href}
+                  target={isExternal ? '_blank' : undefined}
+                  rel={isExternal ? 'noopener noreferrer' : undefined}
+                  className={styles.footerSocialLink}
+                  title={s.label || s.platform}
+                >
+                  <SocialIcon platform={s.platform} size={18} />
+                </a>
+              );
+            })}
         </div>
 
         <div className={styles.footerInfo}>

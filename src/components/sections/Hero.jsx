@@ -5,6 +5,7 @@ import TypeWriter from '@/components/ui/TypeWriter';
 import SocialIcon from '@/components/ui/SocialIcon';
 import HeroTerminal from '@/components/ui/HeroTerminal';
 import { useCMS } from '@/context/CMSContext';
+import { formatSocialUrl } from '@/data/cmsData';
 import styles from './Hero.module.css';
 
 const typewriterTexts = [
@@ -34,14 +35,16 @@ export default function Hero() {
   const lastName = nameParts.length > 1 ? nameParts.pop() : '';
   const firstName = nameParts.join(' ');
 
-  // Compute dynamic social links list
-  const socialList = Array.isArray(info.socialLinks) && info.socialLinks.length > 0
+  // Compute dynamic social links list filtered for Hero placement
+  const rawSocialList = Array.isArray(info.socialLinks) && info.socialLinks.length > 0
     ? info.socialLinks
     : [
-        ...(info.linkedin ? [{ id: 's-linkedin', platform: 'linkedin', label: 'LinkedIn', url: info.linkedin }] : []),
-        ...(info.github ? [{ id: 's-github', platform: 'github', label: 'GitHub', url: info.github }] : []),
-        ...(info.email ? [{ id: 's-email', platform: 'email', label: 'Email', url: info.email.startsWith('mailto:') ? info.email : `mailto:${info.email}` }] : []),
+        ...(info.linkedin ? [{ id: 's-linkedin', platform: 'linkedin', label: 'LinkedIn', url: info.linkedin, placement: 'both' }] : []),
+        ...(info.github ? [{ id: 's-github', platform: 'github', label: 'GitHub', url: info.github, placement: 'both' }] : []),
+        ...(info.email ? [{ id: 's-email', platform: 'email', label: 'Email', url: info.email.startsWith('mailto:') ? info.email : `mailto:${info.email}`, placement: 'both' }] : []),
       ];
+
+  const socialList = rawSocialList.filter((s) => s.placement === 'both' || s.placement === 'hero' || !s.placement);
 
   return (
     <section id="hero" className={styles.hero}>
@@ -104,16 +107,17 @@ export default function Hero() {
             {/* Social links */}
             <motion.div className={styles.socials} variants={itemVariants}>
               {socialList.map((s) => {
-                const url = s.url?.includes('@') && !s.url.startsWith('http') && !s.url.startsWith('mailto:')
-                  ? `mailto:${s.url}`
-                  : s.url || '#';
+                const rawUrl = s.url || (s.label?.startsWith('http') ? s.label : '#');
+                const url = formatSocialUrl(rawUrl, s.platform);
                 const isMail = url.startsWith('mailto:');
+                const isExternal = !isMail && url !== '#' && (url.startsWith('http://') || url.startsWith('https://'));
+
                 return (
                   <a
                     key={s.id || s.platform}
                     href={url}
-                    target={isMail ? undefined : '_blank'}
-                    rel={isMail ? undefined : 'noopener noreferrer'}
+                    target={isExternal ? '_blank' : undefined}
+                    rel={isExternal ? 'noopener noreferrer' : undefined}
                     className={styles.socialLink}
                     title={s.label || s.platform}
                   >

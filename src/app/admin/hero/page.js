@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCMS } from '@/context/CMSContext';
-import { availableSocialPlatforms, defaultSocialLinks } from '@/data/cmsData';
+import { availableSocialPlatforms, defaultSocialLinks, formatSocialUrl } from '@/data/cmsData';
 import SocialIcon from '@/components/ui/SocialIcon';
 import styles from '../adminForm.module.css';
 
@@ -21,10 +21,29 @@ export default function AdminHeroPage() {
   });
 
   const [socialLinks, setSocialLinks] = useState(() => {
-    if (cmsData?.personalInfo?.socialLinks && cmsData.personalInfo.socialLinks.length > 0) {
-      return cmsData.personalInfo.socialLinks;
-    }
-    return defaultSocialLinks;
+    const raw = (cmsData?.personalInfo?.socialLinks && cmsData.personalInfo.socialLinks.length > 0)
+      ? cmsData.personalInfo.socialLinks
+      : defaultSocialLinks;
+
+    // Self-healing migration if user previously entered URL in label & default placement
+    return raw.map((s) => {
+      let finalUrl = s.url || '';
+      let finalLabel = s.label || '';
+      if (
+        (finalLabel.startsWith('http') || finalLabel.startsWith('www.') || finalLabel.includes('.com')) &&
+        (!finalUrl || finalUrl === '#' || finalUrl === 'https://' || finalUrl.includes('username'))
+      ) {
+        finalUrl = finalLabel;
+        const platformObj = availableSocialPlatforms.find((p) => p.id === s.platform);
+        finalLabel = platformObj?.name || s.platform;
+      }
+      return {
+        ...s,
+        label: finalLabel,
+        url: finalUrl,
+        placement: s.placement || 'both', // 'both' | 'hero' | 'footer'
+      };
+    });
   });
 
   const [toast, setToast] = useState('');
@@ -36,11 +55,22 @@ export default function AdminHeroPage() {
 
   const handleAddSocial = (platformId = 'globe', defaultLabel = '') => {
     const platformObj = availableSocialPlatforms.find((p) => p.id === platformId);
+    let defaultUrl = '';
+    if (platformId === 'email') defaultUrl = 'mailto:';
+    else if (platformId === 'facebook') defaultUrl = 'https://facebook.com/';
+    else if (platformId === 'github') defaultUrl = 'https://github.com/';
+    else if (platformId === 'linkedin') defaultUrl = 'https://linkedin.com/in/';
+    else if (platformId === 'twitter') defaultUrl = 'https://x.com/';
+    else if (platformId === 'youtube') defaultUrl = 'https://youtube.com/@';
+    else if (platformId === 'instagram') defaultUrl = 'https://instagram.com/';
+    else defaultUrl = 'https://';
+
     const newLink = {
       id: 'social_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
       platform: platformId,
       label: defaultLabel || platformObj?.name || 'Custom Link',
-      url: platformId === 'email' ? 'mailto:' : 'https://',
+      url: defaultUrl,
+      placement: 'both', // 'both' | 'hero' | 'footer'
     };
     setSocialLinks([...socialLinks, newLink]);
   };
@@ -48,14 +78,27 @@ export default function AdminHeroPage() {
   const handleUpdateSocial = (index, field, value) => {
     const updated = [...socialLinks];
     updated[index] = { ...updated[index], [field]: value };
-    
-    // If platform changed, auto-suggest label if label was generic or empty
+
+    // If platform changed, auto-suggest label
     if (field === 'platform') {
       const platformObj = availableSocialPlatforms.find((p) => p.id === value);
-      if (platformObj && (!updated[index].label || availableSocialPlatforms.some(p => p.name === updated[index].label))) {
+      if (platformObj && (!updated[index].label || availableSocialPlatforms.some((p) => p.name === updated[index].label))) {
         updated[index].label = platformObj.name;
       }
     }
+
+    // Smart auto-fix: If user accidentally typed a URL in the label field
+    if (
+      field === 'label' &&
+      (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('www.') || value.includes('.com') || value.includes('.me'))
+    ) {
+      if (!updated[index].url || updated[index].url === 'https://' || updated[index].url === '#' || updated[index].url.includes('username')) {
+        updated[index].url = value;
+        const platformObj = availableSocialPlatforms.find((p) => p.id === updated[index].platform);
+        updated[index].label = platformObj?.name || 'Social Link';
+      }
+    }
+
     setSocialLinks(updated);
   };
 
@@ -76,20 +119,47 @@ export default function AdminHeroPage() {
 
   const handleSave = (e) => {
     e?.preventDefault();
-    
+
+    // Clean & normalize all social links
+    const cleanSocialLinks = socialLinks.map((s) => {
+      let finalUrl = s.url?.trim() || '';
+      let finalLabel = s.label?.trim() || '';
+
+      // If user typed URL into label by mistake
+      if (
+        (finalLabel.startsWith('http') || finalLabel.startsWith('www.') || finalLabel.includes('.com')) &&
+        (!finalUrl || finalUrl === '#' || finalUrl === 'https://')
+      ) {
+        finalUrl = finalLabel;
+        const platformObj = availableSocialPlatforms.find((p) => p.id === s.platform);
+        finalLabel = platformObj?.name || s.platform;
+      }
+
+      // Format URL with protocol
+      finalUrl = formatSocialUrl(finalUrl, s.platform);
+
+      return {
+        ...s,
+        label: finalLabel || availableSocialPlatforms.find((p) => p.id === s.platform)?.name || s.platform,
+        url: finalUrl,
+        placement: s.placement || 'both',
+      };
+    });
+
     // Auto-extract primary handles for legacy backward compatibility
-    const githubLink = socialLinks.find(s => s.platform === 'github')?.url || '';
-    const linkedinLink = socialLinks.find(s => s.platform === 'linkedin')?.url || '';
-    const emailLink = socialLinks.find(s => s.platform === 'email')?.url?.replace(/^mailto:/, '') || '';
+    const githubLink = cleanSocialLinks.find((s) => s.platform === 'github')?.url || '';
+    const linkedinLink = cleanSocialLinks.find((s) => s.platform === 'linkedin')?.url || '';
+    const emailLink = cleanSocialLinks.find((s) => s.platform === 'email')?.url?.replace(/^mailto:/, '') || '';
 
     updatePersonalInfo({
       ...form,
-      socialLinks,
+      socialLinks: cleanSocialLinks,
       github: githubLink || cmsData?.personalInfo?.github,
       linkedin: linkedinLink || cmsData?.personalInfo?.linkedin,
       email: emailLink || cmsData?.personalInfo?.email,
     });
 
+    setSocialLinks(cleanSocialLinks);
     showToast('✓ Hero & Social Links updated successfully!');
   };
 
@@ -112,7 +182,7 @@ export default function AdminHeroPage() {
           <span className="section-tag">HERO &amp; PROFILE</span>
           <h1 className={styles.title}>Hero &amp; Social Links</h1>
           <p className={styles.subtitle}>
-            Manage your headline, introduction, and connect all your custom social media channels &amp; developer handles dynamically.
+            Manage your headline, introduction, and connect all your custom social media channels &amp; developer handles dynamically. Choose whether each link appears on Home/Hero, Footer, or Both!
           </p>
         </div>
         <button type="button" onClick={handleSave} className="btn btn-primary">
@@ -219,7 +289,7 @@ export default function AdminHeroPage() {
               <span>🌐</span> Dynamic Social Media &amp; Handles
             </h2>
             <p style={{ color: 'var(--clr-text-secondary)', fontSize: '0.85rem', marginTop: '0.25rem' }}>
-              Add, remove, or customize any social media channel. These appear on your Hero, Contact, and Footer sections with official icons.
+              Add, remove, or customize any social media channel. You can independently control whether each icon shows on <strong>Home/Hero</strong>, <strong>Footer</strong>, or <strong>Both</strong>.
             </p>
           </div>
 
@@ -270,8 +340,20 @@ export default function AdminHeroPage() {
           </div>
         </div>
 
+        {/* Social Links List Header */}
+        {socialLinks.length > 0 && (
+          <div className={styles.socialListHeader}>
+            <span>Icon</span>
+            <span>Platform</span>
+            <span>Display Label</span>
+            <span>Show Location</span>
+            <span>Full URL Link (https://...)</span>
+            <span style={{ textAlign: 'center' }}>Remove</span>
+          </div>
+        )}
+
         {/* Social Links List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <AnimatePresence>
             {socialLinks.map((item, index) => (
               <motion.div
@@ -281,9 +363,9 @@ export default function AdminHeroPage() {
                 exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
                 className={styles.socialRow}
               >
-                {/* Reorder Buttons & Icon */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                {/* 1. Reorder Buttons & Icon Preview */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
                     <button
                       type="button"
                       onClick={() => handleMove(index, -1)}
@@ -293,8 +375,9 @@ export default function AdminHeroPage() {
                         border: 'none',
                         color: index === 0 ? 'var(--clr-text-muted)' : 'var(--clr-text-primary)',
                         cursor: index === 0 ? 'default' : 'pointer',
-                        fontSize: '0.75rem',
+                        fontSize: '0.7rem',
                         padding: '0 2px',
+                        lineHeight: 1,
                       }}
                       title="Move Up"
                     >
@@ -309,8 +392,9 @@ export default function AdminHeroPage() {
                         border: 'none',
                         color: index === socialLinks.length - 1 ? 'var(--clr-text-muted)' : 'var(--clr-text-primary)',
                         cursor: index === socialLinks.length - 1 ? 'default' : 'pointer',
-                        fontSize: '0.75rem',
+                        fontSize: '0.7rem',
                         padding: '0 2px',
+                        lineHeight: 1,
                       }}
                       title="Move Down"
                     >
@@ -318,7 +402,7 @@ export default function AdminHeroPage() {
                     </button>
                   </div>
 
-                  {/* Live Icon Preview */}
+                  {/* Icon Badge */}
                   <div
                     style={{
                       width: '38px',
@@ -338,13 +422,13 @@ export default function AdminHeroPage() {
                   </div>
                 </div>
 
-                {/* Platform Selector */}
-                <div style={{ minWidth: '130px' }}>
+                {/* 2. Platform Selector */}
+                <div className={styles.socialRowSelector}>
                   <select
                     value={item.platform}
                     onChange={(e) => handleUpdateSocial(index, 'platform', e.target.value)}
                     className={styles.select}
-                    style={{ padding: '0.55rem 0.75rem', fontSize: '0.85rem' }}
+                    style={{ fontSize: '0.85rem' }}
                   >
                     {availableSocialPlatforms.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -354,16 +438,36 @@ export default function AdminHeroPage() {
                   </select>
                 </div>
 
-                {/* Label & URL Inputs */}
-                <div className={styles.socialInputs}>
+                {/* 3. Label Input */}
+                <div className={styles.socialRowLabel}>
                   <input
                     type="text"
                     value={item.label}
                     onChange={(e) => handleUpdateSocial(index, 'label', e.target.value)}
-                    placeholder="Label (e.g. LinkedIn)"
+                    placeholder="e.g. Facebook"
                     className={styles.input}
-                    style={{ padding: '0.55rem 0.75rem', fontSize: '0.85rem' }}
+                    style={{ fontSize: '0.85rem' }}
+                    title="Display Label"
                   />
+                </div>
+
+                {/* 4. Placement Selector (Both / Hero Only / Footer Only) */}
+                <div className={styles.socialRowPlacement}>
+                  <select
+                    value={item.placement || 'both'}
+                    onChange={(e) => handleUpdateSocial(index, 'placement', e.target.value)}
+                    className={styles.select}
+                    style={{ fontSize: '0.82rem' }}
+                    title="Where to display this icon"
+                  >
+                    <option value="both">🌐 Hero &amp; Footer</option>
+                    <option value="hero">🏠 Hero Only</option>
+                    <option value="footer">🦶 Footer Only</option>
+                  </select>
+                </div>
+
+                {/* 5. Full URL Input */}
+                <div className={styles.socialRowUrl}>
                   <input
                     type="text"
                     value={item.url}
@@ -371,23 +475,29 @@ export default function AdminHeroPage() {
                     placeholder={
                       item.platform === 'email'
                         ? 'mailto:your.email@example.com'
+                        : item.platform === 'facebook'
+                        ? 'https://facebook.com/your-username'
+                        : item.platform === 'whatsapp'
+                        ? 'https://wa.me/8801XXXXXXXXX'
                         : `https://${item.platform}.com/username`
                     }
                     className={styles.input}
-                    style={{ padding: '0.55rem 0.75rem', fontSize: '0.85rem' }}
+                    style={{ fontSize: '0.85rem' }}
+                    title="Full Link URL"
                   />
                 </div>
 
-                {/* Delete Button */}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveSocial(index)}
-                  className={styles.deleteBtn}
-                  style={{ padding: '0.5rem 0.65rem', borderRadius: '6px' }}
-                  title="Remove this link"
-                >
-                  ✕
-                </button>
+                {/* 6. Compact Delete Button */}
+                <div className={styles.socialRowDelete}>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSocial(index)}
+                    className={styles.socialDeleteBtn}
+                    title="Remove this link"
+                  >
+                    ✕
+                  </button>
+                </div>
               </motion.div>
             ))}
           </AnimatePresence>

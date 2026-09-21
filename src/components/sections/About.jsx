@@ -19,6 +19,60 @@ export default function About() {
   const info = cmsData?.personalInfo || {};
   const aboutData = cmsData?.about || {};
 
+  const avatarShape = aboutData.avatarShape || 'morphing-bubble';
+  const avatarAnim = aboutData.avatarAnimation || (avatarShape === 'morphing-bubble' ? 'morph' : 'pulse-glow');
+  const showOrbitRings = aboutData.showOrbitRings ?? true;
+  const showCornerBrackets = aboutData.showCornerBrackets ?? true;
+  const avatarImgSrc = aboutData.avatarImage || '/profile.jpg';
+
+  // Determine avatar CSS shape class
+  const shapeClass =
+    avatarShape === 'teardrop'
+      ? styles.shapeTeardrop
+      : avatarShape === 'modern-circle'
+      ? styles.shapeCircle
+      : avatarShape === 'rounded-squircle'
+      ? styles.shapeSquircle
+      : avatarShape === 'smooth-card'
+      ? styles.shapeSmoothCard
+      : avatarShape === 'cyber-hexagon'
+      ? styles.shapeHexagon
+      : avatarShape === 'cyber-octagon'
+      ? styles.shapeOctagon
+      : avatarShape === 'diamond-shield'
+      ? styles.shapeDiamondShield
+      : avatarShape === 'cyber-box'
+      ? styles.shapeCyberBox
+      : styles.shapeMorphBubble;
+
+  // Determine avatar CSS animation class
+  const animClass =
+    avatarAnim === 'lava-lamp'
+      ? styles.animLavaLamp
+      : avatarAnim === 'jelly-bounce'
+      ? styles.animJellyBounce
+      : avatarAnim === 'cyber-glitch'
+      ? styles.animCyberGlitch
+      : avatarAnim === 'laser-scanner'
+      ? styles.animLaserScanner
+      : avatarAnim === 'neon-pulsar'
+      ? styles.animNeonPulsar
+      : avatarAnim === 'zero-g-float'
+      ? styles.animZeroGFloat
+      : avatarAnim === 'event-horizon'
+      ? styles.animEventHorizon
+      : avatarAnim === 'quantum-orbit'
+      ? styles.animQuantumOrbit
+      : avatarAnim === 'rotating-conic'
+      ? styles.animRotatingConic
+      : avatarAnim === 'pulse-glow'
+      ? styles.animPulseGlow
+      : avatarAnim === 'pure-static'
+      ? styles.animPureStatic
+      : avatarShape === 'morphing-bubble'
+      ? styles.animMorph
+      : styles.animPulseGlow;
+
   const dynamicStats = [
     { value: aboutData.yearsExperience || '4+', label: 'Years Experience' },
     { value: aboutData.projectsCompleted || '25+', label: 'Projects Delivered' },
@@ -44,7 +98,7 @@ export default function About() {
           <p className="section-label">{(!aboutData?.label || aboutData.label.includes('<//')) ? 'Who I Am' : aboutData.label}</p>
           <h2 className="section-title">{aboutData.title || 'About Me'}</h2>
           <p className="section-subtitle">
-            A glimpse into who I am, what drives me, and the journey that shaped my craft.
+            {aboutData.subtitle || 'A glimpse into who I am, what drives me, and the journey that shaped my craft.'}
           </p>
         </motion.div>
 
@@ -58,33 +112,46 @@ export default function About() {
             transition={{ duration: 0.8 }}
           >
             <div className={styles.avatarFrame}>
-              <div className={styles.avatarInner}>
-                <Image 
-                  src="/profile.jpg" 
-                  alt={info.name || 'John Liton Mardy'} 
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  sizes="(max-width: 480px) 220px, 280px"
-                  priority
-                />
+              <div className={`${styles.avatarContainer} ${animClass}`}>
+                <div className={`${styles.avatarInner} ${shapeClass}`}>
+                  <Image 
+                    src={avatarImgSrc} 
+                    alt={info.name || 'John Liton Mardy'} 
+                    fill
+                    className={styles.avatarImage}
+                    sizes="(max-width: 480px) 220px, 280px"
+                    priority
+                  />
+                </div>
               </div>
+
               {/* Orbiting decorations */}
-              <div className={`${styles.orbit} ${styles.orbit1}`} />
-              <div className={`${styles.orbit} ${styles.orbit2}`} />
+              {showOrbitRings && (
+                <>
+                  <div className={`${styles.orbit} ${styles.orbit1}`} />
+                  <div className={`${styles.orbit} ${styles.orbit2}`} />
+                </>
+              )}
 
               {/* Corner brackets */}
-              <div className={styles.bracketTL} />
-              <div className={styles.bracketBR} />
+              {showCornerBrackets && (
+                <>
+                  <div className={styles.bracketTL} />
+                  <div className={styles.bracketBR} />
+                </>
+              )}
             </div>
 
             {/* Location badge */}
-            <div className={styles.locationBadge}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              {info.location || 'Dhaka, Bangladesh'}
-            </div>
+            {(aboutData.showLocationBadge ?? true) && (
+              <div className={styles.locationBadge}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                {info.location || aboutData.location || 'Dhaka, Bangladesh'}
+              </div>
+            )}
           </motion.div>
 
           {/* Right: Text Content */}
@@ -109,38 +176,45 @@ export default function About() {
               {info.bio}
             </motion.p>
 
-            <motion.p
-              className={styles.bio}
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              I specialize in building <span className={styles.highlight}>full-stack web &amp; mobile applications</span> and
-              have a deep passion for <span className={styles.highlight}>3D interactive digital experiences</span>. 
-              I believe great software is both technically sound and a joy to use.
-            </motion.p>
+            {aboutData.secondaryBio && (
+              <motion.p
+                className={styles.bio}
+                initial={{ opacity: 0, x: 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                {aboutData.secondaryBio}
+              </motion.p>
+            )}
 
             {/* What I do list */}
-            <motion.ul
-              className={styles.doList}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              {[
-                'Build scalable full-stack web & mobile apps',
-                'Create immersive 3D web experiences',
-                'Architect clean, maintainable codebases',
-                'Optimize for performance & accessibility',
-              ].map((item, i) => (
-                <li key={i} className={styles.doItem}>
-                  <span className={styles.doIcon}>▹</span>
-                  {item}
-                </li>
-              ))}
-            </motion.ul>
+            {(Array.isArray(aboutData.whatIDo) && aboutData.whatIDo.length > 0 ? aboutData.whatIDo : [
+              'Build scalable full-stack web & mobile apps',
+              'Create immersive 3D web experiences',
+              'Architect clean, maintainable codebases',
+              'Optimize for performance & accessibility',
+            ]).length > 0 && (
+              <motion.ul
+                className={styles.doList}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                {(Array.isArray(aboutData.whatIDo) && aboutData.whatIDo.length > 0 ? aboutData.whatIDo : [
+                  'Build scalable full-stack web & mobile apps',
+                  'Create immersive 3D web experiences',
+                  'Architect clean, maintainable codebases',
+                  'Optimize for performance & accessibility',
+                ]).map((item, i) => (
+                  <li key={i} className={styles.doItem}>
+                    <span className={styles.doIcon}>▹</span>
+                    {item}
+                  </li>
+                ))}
+              </motion.ul>
+            )}
 
             {/* CTA */}
             <motion.div
