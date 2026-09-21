@@ -52,6 +52,86 @@
   color: var(--clr-text-primary);
 }
 
+.presetHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sectionSub {
+  font-size: 0.85rem;
+  color: var(--clr-text-muted);
+  margin-top: 0.2rem;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 0.45rem 0.85rem;
+  min-width: 260px;
+}
+
+.searchIcon {
+  color: var(--clr-text-muted);
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  color: var(--clr-text-primary);
+  font-size: 0.85rem;
+  outline: none;
+  width: 100%;
+}
+
+.categoryFilters {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.catBtn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--clr-border);
+  color: var(--clr-text-secondary);
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.catBtn:hover {
+  border-color: var(--clr-border-hover);
+  color: var(--clr-text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.catBtnActive {
+  background: rgba(0, 255, 255, 0.1) !important;
+  border-color: var(--clr-cyan) !important;
+  color: var(--clr-cyan) !important;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.catCount {
+  opacity: 0.7;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+}
+
 /* Presets Grid */
 .presetsGrid {
   display: grid;
@@ -60,19 +140,26 @@
 }
 
 .presetCard {
-  padding: 1.5rem;
+  padding: 1.35rem;
   border-radius: var(--radius-lg);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   transition: all 0.25s ease;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.presetCard:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
 }
 
 .presetActive {
   border-color: var(--clr-cyan) !important;
   background: rgba(0, 255, 255, 0.06) !important;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.25);
 }
 
 .presetTop {
@@ -82,11 +169,28 @@
   margin-bottom: 0.4rem;
 }
 
+.presetTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .presetName {
   font-family: var(--font-heading);
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--clr-text-primary);
+  margin: 0;
+}
+
+.presetBadge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+  letter-spacing: 0.02em;
 }
 
 .activeTag {
@@ -98,23 +202,30 @@
 
 .presetDesc {
   color: var(--clr-text-muted);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   line-height: 1.4;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.1rem;
   flex-grow: 1;
 }
 
 .chipsRow {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .colorChip {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+}
+
+.emptySearch {
+  text-align: center;
+  padding: 3rem;
+  color: var(--clr-text-muted);
+  font-size: 0.95rem;
 }
 
 /* Custom Grid */

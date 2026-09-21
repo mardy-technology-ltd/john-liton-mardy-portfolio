@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCMS } from '@/context/CMSContext';
 import { themePresets } from '@/data/cmsData';
 import styles from './adminTheme.module.css';
+
+const categories = ['All', 'Developer & Sci-Fi', 'Executive & Luxury', 'Creative & Gradients'];
 
 export default function AdminThemePage() {
   const { cmsData, setTheme, setCustomColors, updateThemeConfig } = useCMS();
@@ -12,6 +14,9 @@ export default function AdminThemePage() {
   const currentThemeId = cmsData?.themeConfig?.activeTheme || 'cyberpunk-neon';
   const currentPreset = themePresets[currentThemeId] || themePresets['cyberpunk-neon'];
   const currentColors = cmsData?.themeConfig?.customColors || currentPreset.colors;
+
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [customForm, setCustomForm] = useState({
     primary: currentColors.primary || '#00ffff',
@@ -69,6 +74,17 @@ export default function AdminThemePage() {
       : '0, 255, 255';
   };
 
+  // Filtered presets
+  const allPresets = Object.values(themePresets);
+  const filteredPresets = allPresets.filter((preset) => {
+    const matchesCategory = activeCategory === 'All' || preset.category === activeCategory;
+    const matchesSearch =
+      preset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      preset.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      preset.badge?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
   return (
     <div className={styles.themeStudio}>
       {/* Toast */}
@@ -89,16 +105,56 @@ export default function AdminThemePage() {
           <span className="section-tag">&lt;// STUDIO: THEME &amp; PALETTE CUSTOMIZER /&gt;</span>
           <h1 className={styles.title}>Live Theme Studio</h1>
           <p className={styles.subtitle}>
-            Select from preset color palettes or create your own custom theme. All changes update across the website in real-time.
+            Select from 16 highly curated professional theme presets across Developer, Executive &amp; Creative palettes, or craft your custom color spectrum.
           </p>
         </div>
       </div>
 
       {/* Preset Themes Section */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>1. Choose Theme Preset</h2>
+        <div className={styles.presetHeaderRow}>
+          <div>
+            <h2 className={styles.sectionTitle}>1. Choose Theme Preset</h2>
+            <p className={styles.sectionSub}>Pick from {allPresets.length} hand-crafted high-contrast professional color themes</p>
+          </div>
+
+          {/* Search Input */}
+          <div className={styles.searchWrapper}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={styles.searchIcon}>
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search theme or vibe..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.searchInput}
+            />
+          </div>
+        </div>
+
+        {/* Category Filter Pills */}
+        <div className={styles.categoryFilters}>
+          {categories.map((cat) => {
+            const count = cat === 'All' ? allPresets.length : allPresets.filter((p) => p.category === cat).length;
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                className={`${styles.catBtn} ${isActive ? styles.catBtnActive : ''}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat} <span className={styles.catCount}>({count})</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Presets Grid */}
         <div className={styles.presetsGrid}>
-          {Object.values(themePresets).map((preset) => {
+          {filteredPresets.map((preset) => {
             const isSelected = currentThemeId === preset.id && !cmsData?.themeConfig?.customColors;
             return (
               <motion.div
@@ -107,11 +163,27 @@ export default function AdminThemePage() {
                 onClick={() => handleSelectPreset(preset.id)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                layout
               >
                 <div className={styles.presetTop}>
-                  <h3 className={styles.presetName}>{preset.name}</h3>
+                  <div className={styles.presetTitleWrap}>
+                    <h3 className={styles.presetName}>{preset.name}</h3>
+                    {preset.badge && (
+                      <span
+                        className={styles.presetBadge}
+                        style={{
+                          color: preset.colors.primary,
+                          borderColor: `${preset.colors.primary}40`,
+                          backgroundColor: `${preset.colors.primary}15`,
+                        }}
+                      >
+                        {preset.badge}
+                      </span>
+                    )}
+                  </div>
                   {isSelected && <span className={styles.activeTag}>✓ Active</span>}
                 </div>
+
                 <p className={styles.presetDesc}>{preset.description}</p>
 
                 {/* Color Palette Chips */}
@@ -128,6 +200,11 @@ export default function AdminThemePage() {
                   />
                   <div
                     className={styles.colorChip}
+                    style={{ background: preset.colors.accentPink || preset.colors.primary }}
+                    title={`Accent: ${preset.colors.accentPink || preset.colors.primary}`}
+                  />
+                  <div
+                    className={styles.colorChip}
                     style={{ background: preset.colors.bgPrimary }}
                     title={`Background: ${preset.colors.bgPrimary}`}
                   />
@@ -141,6 +218,12 @@ export default function AdminThemePage() {
             );
           })}
         </div>
+
+        {filteredPresets.length === 0 && (
+          <div className={styles.emptySearch}>
+            <p>No themes matched &ldquo;{searchQuery}&rdquo;. Try another search term!</p>
+          </div>
+        )}
       </section>
 
       {/* Custom Color Palette & Live Preview */}
