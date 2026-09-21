@@ -29,7 +29,11 @@ function GlowRing({ radius, tube, color, speed, rotX, rotZ }) {
   );
 }
 
-export default function HeroModel() {
+export default function HeroModel({
+  primaryColor = '#00ffff',
+  secondaryColor = '#a855f7',
+  accentColor = '#ff6b9d',
+}) {
   const coreRef = useRef();
   const outerRef = useRef();
   const groupRef = useRef();
@@ -69,15 +73,15 @@ export default function HeroModel() {
     <Float speed={1.5} rotationIntensity={0.4} floatIntensity={0.8}>
       <group position={basePosition} ref={groupRef} scale={baseScale}>
         {/* Ambient lights for the model */}
-        <pointLight color="#00FFFF" intensity={2} distance={6} />
-        <pointLight color="#A855F7" intensity={1.5} distance={5} position={[2, 2, 2]} />
+        <pointLight color={primaryColor} intensity={2} distance={6} />
+        <pointLight color={secondaryColor} intensity={1.5} distance={5} position={[2, 2, 2]} />
 
         {/* Core icosahedron */}
         <mesh ref={coreRef}>
           <icosahedronGeometry args={[0.9, 1]} />
           <MeshDistortMaterial
-            color="#00FFFF"
-            emissive="#00FFFF"
+            color={primaryColor}
+            emissive={primaryColor}
             emissiveIntensity={0.4}
             distort={0.35}
             speed={2}
@@ -92,8 +96,8 @@ export default function HeroModel() {
         <mesh>
           <sphereGeometry args={[0.5, 32, 32]} />
           <meshStandardMaterial
-            color="#A855F7"
-            emissive="#A855F7"
+            color={secondaryColor}
+            emissive={secondaryColor}
             emissiveIntensity={1.2}
             transparent
             opacity={0.5}
@@ -101,16 +105,16 @@ export default function HeroModel() {
         </mesh>
 
         {/* Orbiting rings */}
-        <GlowRing radius={1.6} tube={0.015} color="#00FFFF" speed={0.4} rotX={0} rotZ={0} />
-        <GlowRing radius={1.9} tube={0.01} color="#A855F7" speed={0.25} rotX={Math.PI / 4} rotZ={Math.PI / 6} />
-        <GlowRing radius={2.2} tube={0.008} color="#FF6B9D" speed={0.15} rotX={Math.PI / 2} rotZ={Math.PI / 3} />
+        <GlowRing radius={1.6} tube={0.015} color={primaryColor} speed={0.4} rotX={0} rotZ={0} />
+        <GlowRing radius={1.9} tube={0.01} color={secondaryColor} speed={0.25} rotX={Math.PI / 4} rotZ={Math.PI / 6} />
+        <GlowRing radius={2.2} tube={0.008} color={accentColor} speed={0.15} rotX={Math.PI / 2} rotZ={Math.PI / 3} />
 
         {/* Outer wireframe sphere */}
         <mesh ref={outerRef}>
           <sphereGeometry args={[1.4, 12, 12]} />
           <meshStandardMaterial
-            color="#00FFFF"
-            emissive="#00FFFF"
+            color={primaryColor}
+            emissive={primaryColor}
             emissiveIntensity={0.3}
             wireframe
             transparent
@@ -120,19 +124,22 @@ export default function HeroModel() {
 
         {/* Small orbiting satellites */}
         {[0, 1, 2].map((i) => (
-          <OrbitingDot key={i} index={i} />
+          <OrbitingDot
+            key={i}
+            index={i}
+            colors={[primaryColor, secondaryColor, accentColor]}
+          />
         ))}
       </group>
     </Float>
   );
 }
 
-function OrbitingDot({ index }) {
+function OrbitingDot({ index, colors = ['#00FFFF', '#A855F7', '#FF6B9D'] }) {
   const ref = useRef();
   const speed = 0.6 + index * 0.3;
   const radius = 1.8 + index * 0.4;
   const yOffset = (index - 1) * 0.5;
-  const colors = ['#00FFFF', '#A855F7', '#FF6B9D'];
 
   useFrame((state) => {
     const t = state.clock.elapsedTime * speed;
@@ -143,12 +150,14 @@ function OrbitingDot({ index }) {
     }
   });
 
+  const dotColor = colors[index % colors.length] || colors[0];
+
   return (
     <mesh ref={ref}>
       <sphereGeometry args={[0.06, 16, 16]} />
       <meshStandardMaterial
-        color={colors[index]}
-        emissive={colors[index]}
+        color={dotColor}
+        emissive={dotColor}
         emissiveIntensity={3}
       />
     </mesh>

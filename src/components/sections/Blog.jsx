@@ -23,7 +23,7 @@ export default function Blog() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="section-tag">&lt;// SECTION: ARTICLES &amp; INSIGHTS /&gt;</span>
+          <p className="section-label">Articles &amp; Insights</p>
           <h2 className="section-title">Latest Writings</h2>
           <p className="section-subtitle">
             Thoughts, technical breakdowns, and guides on full-stack architecture, 3D web experiences, and engineering best practices.

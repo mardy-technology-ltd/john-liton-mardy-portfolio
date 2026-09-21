@@ -9,7 +9,7 @@ export default function AdminAboutPage() {
   const { cmsData, updateAbout } = useCMS();
 
   const [form, setForm] = useState({
-    label: cmsData?.about?.label || '<// SECTION: IDENTITY & BACKGROUND />',
+    label: (cmsData?.about?.label && !cmsData.about.label.includes('<//')) ? cmsData.about.label : 'Who I Am',
     title: cmsData?.about?.title || 'About Me',
     yearsExperience: cmsData?.about?.yearsExperience || '4+',
     projectsCompleted: cmsData?.about?.projectsCompleted || '25+',
@@ -47,12 +47,13 @@ export default function AdminAboutPage() {
         <form onSubmit={handleSave} className={styles.form}>
           <div className={styles.formGrid2}>
             <div className={styles.inputGroup}>
-              <label className={styles.label}>Section Cyber Label</label>
+              <label className={styles.label}>Section Sub-heading</label>
               <input
                 type="text"
                 value={form.label}
                 onChange={(e) => setForm({ ...form, label: e.target.value })}
                 className={styles.input}
+                placeholder="Who I Am"
               />
             </div>
 

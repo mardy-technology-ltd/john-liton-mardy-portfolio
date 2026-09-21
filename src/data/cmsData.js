@@ -346,10 +346,59 @@ export const themePresets = {
   },
 };
 
+export const bgAnimationOptions = [
+  {
+    id: 'particles',
+    name: '3D Constellation & Cosmic Particles',
+    icon: '✨',
+    badge: '3D WebGL',
+    description: 'Floating cosmic particles with interactive mouse drag & drift physics',
+  },
+  {
+    id: 'cyber-core',
+    name: '3D Quantum Core & Orbiting Rings',
+    icon: '🪐',
+    badge: '3D Model',
+    description: 'Interactive rotating 3D futuristic core with glowing neon satellite rings',
+  },
+  {
+    id: 'deep-space',
+    name: 'Hyperspace Starfield Warp',
+    icon: '🚀',
+    badge: 'High Speed',
+    description: 'High-density depth starfield streaming through 3D galactic space',
+  },
+  {
+    id: 'matrix-stream',
+    name: 'Digital Matrix Rain Stream',
+    icon: '⚡',
+    badge: 'Cyberpunk',
+    description: 'Cascading digital code streams with glowing neon trail particles',
+  },
+  {
+    id: 'aurora-waves',
+    name: 'Fluid Aurora Ambient Mesh',
+    icon: '🌊',
+    badge: 'Ambient Glow',
+    description: 'Silky smooth ambient gradient waves with pulsing neon light orbs',
+  },
+  {
+    id: 'minimal-clean',
+    name: 'Minimal Clean (Zero FX)',
+    icon: '🛡️',
+    badge: 'Ultra Fast',
+    description: 'Clean distraction-free dark canvas for ultra-fast performance & readability',
+  },
+];
+
 export const defaultCMSData = {
   themeConfig: {
     activeTheme: 'cyberpunk-neon',
     customColors: null,
+    bgAnimation: 'particles', // particles | cyber-core | deep-space | matrix-stream | aurora-waves | minimal-clean
+    animationSpeed: 1, // 0.5 (slow), 1 (normal), 2 (fast)
+    particleCount: 1800, // 500 - 3000
+    mouseReactivity: true,
     scanlines: true,
     showGrid: true,
     cursorGlow: true,
@@ -377,7 +426,7 @@ export const defaultCMSData = {
     resumeUrl: "#",
   },
   about: {
-    label: "<// SECTION: IDENTITY & BACKGROUND />",
+    label: "Who I Am",
     title: "About Me",
     yearsExperience: "4+",
     projectsCompleted: "20+",

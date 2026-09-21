@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCMS } from '@/context/CMSContext';
-import { themePresets } from '@/data/cmsData';
+import { themePresets, bgAnimationOptions } from '@/data/cmsData';
 import styles from './adminTheme.module.css';
 
 const categories = ['All', 'Developer & Sci-Fi', 'Executive & Luxury', 'Creative & Gradients'];
@@ -226,12 +226,136 @@ export default function AdminThemePage() {
         )}
       </section>
 
+      {/* 2. Background Animation Style Selector */}
+      <section className={styles.section}>
+        <div className={styles.presetHeaderRow}>
+          <div>
+            <h2 className={styles.sectionTitle}>2. Choose Background Animation Style</h2>
+            <p className={styles.sectionSub}>Select the 3D WebGL / Ambient background motion effects for your entire website</p>
+          </div>
+        </div>
+
+        <div className={styles.bgAnimGrid}>
+          {bgAnimationOptions.map((opt) => {
+            const isSelected = (cmsData?.themeConfig?.bgAnimation || 'particles') === opt.id;
+            return (
+              <motion.div
+                key={opt.id}
+                className={`glass-card ${styles.animCard} ${isSelected ? styles.animCardActive : ''}`}
+                onClick={() => {
+                  updateThemeConfig({ bgAnimation: opt.id });
+                  showToast(`✓ Background animation set to "${opt.name}"`);
+                }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className={styles.animTop}>
+                  <div className={styles.animIconTitle}>
+                    <span className={styles.animIcon}>{opt.icon}</span>
+                    <h3 className={styles.animName}>{opt.name}</h3>
+                  </div>
+                  <span
+                    className={styles.animBadge}
+                    style={{
+                      color: isSelected ? 'var(--clr-cyan)' : 'var(--clr-text-muted)',
+                      borderColor: isSelected ? 'var(--clr-cyan)' : 'var(--clr-border)',
+                      backgroundColor: isSelected ? 'rgba(0, 255, 255, 0.1)' : 'transparent',
+                    }}
+                  >
+                    {opt.badge}
+                  </span>
+                </div>
+                <p className={styles.animDesc}>{opt.description}</p>
+                <div className={styles.animFooter}>
+                  {isSelected ? (
+                    <span className={styles.activeTag}>✓ Currently Active</span>
+                  ) : (
+                    <span className={styles.selectPrompt}>Click to Apply</span>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Animation Motion Controls */}
+        <div className={`glass-card ${styles.motionControlsCard}`}>
+          <div className={styles.motionControlsGrid}>
+            <div className={styles.controlGroup}>
+              <label className={styles.controlLabel}>
+                <span>Animation Speed Multiplier</span>
+                <span className={styles.controlVal}>{(cmsData?.themeConfig?.animationSpeed ?? 1)}x</span>
+              </label>
+              <div className={styles.speedButtons}>
+                {[
+                  { label: '0.5x Slow & Subtle', val: 0.5 },
+                  { label: '1.0x Normal Speed', val: 1 },
+                  { label: '1.8x High Energy', val: 1.8 },
+                ].map((s) => {
+                  const isCurrent = (cmsData?.themeConfig?.animationSpeed ?? 1) === s.val;
+                  return (
+                    <button
+                      key={s.val}
+                      type="button"
+                      className={`${styles.speedBtn} ${isCurrent ? styles.speedBtnActive : ''}`}
+                      onClick={() => {
+                        updateThemeConfig({ animationSpeed: s.val });
+                        showToast(`✓ Animation speed set to ${s.val}x`);
+                      }}
+                    >
+                      {s.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className={styles.controlGroup}>
+              <label className={styles.controlLabel}>
+                <span>Particle Density (Count)</span>
+                <span className={styles.controlVal}>{cmsData?.themeConfig?.particleCount ?? 1800} particles</span>
+              </label>
+              <input
+                type="range"
+                min="500"
+                max="3000"
+                step="100"
+                value={cmsData?.themeConfig?.particleCount ?? 1800}
+                onChange={(e) => updateThemeConfig({ particleCount: Number(e.target.value) })}
+                className={styles.rangeInput}
+              />
+              <div className={styles.rangeLabels}>
+                <span>500 (Light)</span>
+                <span>1800 (Balanced)</span>
+                <span>3000 (Dense)</span>
+              </div>
+            </div>
+
+            <div className={styles.controlGroup}>
+              <label className={styles.controlLabel}>
+                <span>3D Mouse Reactivity</span>
+                <span className={styles.controlVal}>{(cmsData?.themeConfig?.mouseReactivity ?? true) ? 'Enabled' : 'Disabled'}</span>
+              </label>
+              <div className={styles.toggleRow}>
+                <p className={styles.toggleInfo}>Particles drift and tilt based on cursor movement</p>
+                <input
+                  type="checkbox"
+                  checked={cmsData?.themeConfig?.mouseReactivity ?? true}
+                  onChange={(e) => updateThemeConfig({ mouseReactivity: e.target.checked })}
+                  className={styles.checkbox}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Custom Color Palette & Live Preview */}
       <section className={styles.customSection}>
         <div className={styles.customGrid}>
           {/* Custom Color Form */}
           <div className={`glass-card ${styles.formCard}`}>
-            <h2 className={styles.sectionTitle}>2. Fine-Tune Custom Colors</h2>
+            <h2 className={styles.sectionTitle}>3. Fine-Tune Custom Colors</h2>
             <form onSubmit={handleApplyCustomColors} className={styles.colorForm}>
               <div className={styles.inputGroup}>
                 <label className={styles.inputLabel}>
@@ -304,7 +428,7 @@ export default function AdminThemePage() {
 
           {/* Live Component Preview Widget */}
           <div className={`glass-card ${styles.previewCard}`}>
-            <h2 className={styles.sectionTitle}>3. Real-Time UI Preview</h2>
+            <h2 className={styles.sectionTitle}>4. Real-Time UI Preview</h2>
             <div
               className={styles.previewBox}
               style={{
@@ -385,7 +509,7 @@ export default function AdminThemePage() {
 
       {/* Visual FX Toggles */}
       <section className={`glass-card ${styles.fxSection}`}>
-        <h2 className={styles.sectionTitle}>4. Visual Effects &amp; Scanlines</h2>
+        <h2 className={styles.sectionTitle}>5. Visual Effects &amp; Scanlines</h2>
         <div className={styles.togglesGrid}>
           <div className={styles.toggleItem}>
             <div>

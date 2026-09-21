@@ -26,7 +26,7 @@ export default function Skills() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="section-tag">&lt;// SECTION: SKILLS &amp; ARSENAL /&gt;</span>
+          <p className="section-label">What I Know</p>
           <h2 className="section-title">My Tech Arsenal</h2>
           <p className="section-subtitle">
             Technologies, frameworks, and tools I use to build scalable web &amp; mobile solutions.

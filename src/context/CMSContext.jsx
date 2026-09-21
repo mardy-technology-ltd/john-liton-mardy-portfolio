@@ -25,6 +25,9 @@ export function CMSProvider({ children }) {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        if (parsed?.about?.label && parsed.about.label.includes('<//')) {
+          parsed.about.label = 'Who I Am';
+        }
         setData((prev) => ({
           ...prev,
           ...parsed,

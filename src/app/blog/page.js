@@ -63,7 +63,7 @@ export default function BlogListPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="section-tag">&lt;// TECHNICAL ARTICLES &amp; KNOWLEDGE BASE /&gt;</span>
+          <p className="section-label">Knowledge Base</p>
           <h1 className={styles.mainTitle}>Articles &amp; Insights</h1>
           <p className={styles.mainSubtitle}>
             Practical guides, deep-dives into modern web architectures, 3D WebGL implementations, and backend engineering patterns.

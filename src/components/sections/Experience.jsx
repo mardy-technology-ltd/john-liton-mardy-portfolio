@@ -18,7 +18,7 @@ export default function Experience() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="section-tag">&lt;// SECTION: CAREER &amp; EXPERIENCE /&gt;</span>
+          <p className="section-label">Career Journey</p>
           <h2 className="section-title">Work Experience</h2>
           <p className="section-subtitle">
             My professional journey — building impactful software at every step.

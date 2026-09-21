@@ -41,7 +41,7 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="section-tag">{aboutData.label || '<// SECTION: IDENTITY & BACKGROUND />'}</span>
+          <p className="section-label">{(!aboutData?.label || aboutData.label.includes('<//')) ? 'Who I Am' : aboutData.label}</p>
           <h2 className="section-title">{aboutData.title || 'About Me'}</h2>
           <p className="section-subtitle">
             A glimpse into who I am, what drives me, and the journey that shaped my craft.

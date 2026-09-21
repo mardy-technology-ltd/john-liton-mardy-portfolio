@@ -105,7 +105,7 @@ export default function Projects() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="section-tag">&lt;// SECTION: PORTFOLIO &amp; WORKS /&gt;</span>
+          <p className="section-label">What I&apos;ve Built</p>
           <h2 className="section-title">Featured Projects</h2>
           <p className="section-subtitle">
             A selection of projects that showcase my skills and passion for building great software.
