@@ -10,7 +10,7 @@
   position: relative;
   z-index: var(--z-content);
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
@@ -19,9 +19,18 @@
   justify-content: center;
 }
 
-.textBlock {
-  max-width: 600px;
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
+  align-items: center;
+  width: 100%;
   padding-top: 5rem;
+  padding-bottom: 3rem;
+}
+
+.textBlock {
+  max-width: 620px;
 }
 
 /* Status Badge */
@@ -69,15 +78,17 @@
 
 /* Name */
 .name {
-  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-size: clamp(2.8rem, 6.5vw, 5.2rem);
   font-weight: 900;
   line-height: 1.05;
+  letter-spacing: -0.02em;
   margin-bottom: 1.25rem;
 }
 
 .nameFirst {
   color: var(--clr-text-primary);
   display: block;
+  line-height: 1;
 }
 
 .nameLast {
@@ -86,6 +97,8 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   display: block;
+  line-height: 1;
+  margin-top: clamp(0.45rem, 1.2vw, 0.75rem);
 }
 
 /* Typewriter row */
@@ -109,7 +122,7 @@
   font-size: 1.05rem;
   line-height: 1.8;
   color: var(--clr-text-secondary);
-  max-width: 520px;
+  max-width: 540px;
   margin-bottom: 2rem;
 }
 
@@ -207,11 +220,34 @@
   opacity: 0.3;
 }
 
+@media (max-width: 1080px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+    padding-top: 6.5rem;
+  }
+  .textBlock {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
-  .textBlock { max-width: 100%; padding-top: 6rem; }
-  .ctas { flex-direction: column; align-items: flex-start; }
+  .heroGrid {
+    padding-top: 5.5rem;
+    gap: 2.5rem;
+  }
+  .ctas {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 @media (max-width: 480px) {
-  .textBlock { padding-top: 5rem; }
+  .content {
+    padding: 0 1.25rem;
+  }
+  .heroGrid {
+    padding-top: 4.5rem;
+  }
 }
+
