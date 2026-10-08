@@ -165,12 +165,12 @@ runTest('STEP 7: Dynamic Social Links Editor responsive grid/flex check', () => 
   const heroAdmin = fs.readFileSync(path.join(rootDir, 'src/app/admin/hero/page.js'), 'utf8');
   const adminFormCss = fs.readFileSync(path.join(rootDir, 'src/app/admin/adminForm.module.css'), 'utf8');
 
-  if (!heroAdmin.includes('styles.socialRow') || !heroAdmin.includes('styles.socialInputs')) {
-    throw new Error('admin/hero/page.js must use responsive socialRow and socialInputs classNames');
+  if (!heroAdmin.includes('styles.socialRow') || !heroAdmin.includes('styles.socialRowSelector')) {
+    throw new Error('admin/hero/page.js must use responsive socialRow and socialRowSelector classNames');
   }
 
-  if (!adminFormCss.includes('.socialRow') || !adminFormCss.includes('.socialInputs')) {
-    throw new Error('adminForm.module.css must declare .socialRow and .socialInputs with media queries');
+  if (!adminFormCss.includes('.socialRow') || !adminFormCss.includes('.socialRowSelector')) {
+    throw new Error('adminForm.module.css must declare .socialRow and .socialRowSelector with media queries');
   }
 });
 
